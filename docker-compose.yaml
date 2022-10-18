@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "$POSTGRES_PORT:$POSTGRES_PORT"
+    expose:
+      - ${POSTGRES_PORT} 
+    restart: unless-stopped
+
+volumes:
+    postgres:
