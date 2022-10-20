@@ -37,12 +37,12 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
   describe('When create users', () => {
-    it('should create a user', async () => {
+    it('should create a user with hashed password', async () => {
       const user = {
         firstname: 'fistname1',
         lastname: 'lastname1',
         email: 'mail1@test.com',
-        password: 'sha123132',
+        password: 'password12345',
       } as CreateUserDTO;
 
       const createdUser = await service.createUser(user);
@@ -52,7 +52,7 @@ describe('UsersService', () => {
           firstname: 'fistname1',
           lastname: 'lastname1',
           email: 'mail1@test.com',
-          password: 'sha123132',
+          password: expect.stringContaining('$argon2id$v=19$m=65536,t=3,p=4'),
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         }),
