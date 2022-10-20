@@ -14,6 +14,7 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDTO): Promise<UserEntity> {
     const hashedPassword = await argon2.hash(createUserDto.password);
+
     return this.userRespository.save({
       ...createUserDto,
       password: hashedPassword,
