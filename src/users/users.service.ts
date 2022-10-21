@@ -17,11 +17,16 @@ export class UsersService {
 
     return this.userRespository.save({
       ...createUserDto,
+      email: createUserDto.email.toLowerCase(),
       password: hashedPassword,
     });
   }
 
   countUsers(): Promise<number> {
     return this.userRespository.count();
+  }
+
+  findUserByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRespository.findOneBy({ email: email.toLowerCase() });
   }
 }

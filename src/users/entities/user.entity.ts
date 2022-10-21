@@ -18,4 +18,8 @@ export class UserEntity extends GenericEntity {
   @Index()
   @Column({ type: 'boolean', default: false })
   isActive: boolean;
+
+  @Index()
+  @Column({ type: 'boolean', default: false })
+  emailVerified: boolean;
 }
