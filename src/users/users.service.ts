@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import * as argon2 from 'argon2';
+import { UpdateUserDTO } from './dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -28,5 +29,14 @@ export class UsersService {
 
   findUserByEmail(email: string): Promise<UserEntity | null> {
     return this.userRespository.findOneBy({ email: email.toLowerCase() });
+  }
+
+  async updateUser(
+    id: number,
+    updateUserDTO: UpdateUserDTO,
+  ): Promise<UserEntity> {
+    await this.userRespository.update(id, updateUserDTO);
+
+    return this.userRespository.findOneBy({ id });
   }
 }

@@ -4,6 +4,9 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { UserEntity } from '../users/entities/user.entity';
 import dbTestingUtils from '../utils/db-testing.utils';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule } from '@nestjs/config';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -11,7 +14,12 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      imports: [...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity])],
+      imports: [
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        ConfigModule,
+        JwtModule.register({}),
+        PassportModule,
+      ],
       providers: [AuthService, UsersService],
     }).compile();
 

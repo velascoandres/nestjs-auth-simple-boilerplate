@@ -22,4 +22,7 @@ export class UserEntity extends GenericEntity {
   @Index()
   @Column({ type: 'boolean', default: false })
   emailVerified: boolean;
+
+  @Column({ nullable: true })
+  refreshToken?: string;
 }

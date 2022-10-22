@@ -5,6 +5,10 @@ import { UsersService } from '../users/users.service';
 import dbTestingUtils from '../utils/db-testing.utils';
 import { AuthService } from './auth.service';
 import usersFixtures from './fixtures/users.fixtures';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule } from '@nestjs/config';
+import { mockConfigService } from '../utils/config-service.mock';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -13,8 +17,22 @@ describe('AuthService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity])],
-      providers: [AuthService, UsersService],
+      imports: [
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        JwtModule.register({}),
+        PassportModule,
+        ConfigModule,
+      ],
+      providers: [
+        AuthService,
+        UsersService,
+        mockConfigService({
+          JWT_ACCESS_SECRET: '123',
+          JWT_REFRESH_SECRET: '1234',
+          JWT_EXPIRES: '45min',
+          JWT_REFRESH_EXPIRES: '1y',
+        }),
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -83,6 +101,71 @@ describe('AuthService', () => {
       );
 
       expect(user).toBe(null);
+    });
+  });
+
+  describe('When generate tokens', () => {
+    it('should generate an accessToken', async () => {
+      const authUser = {
+        id: 1,
+        email: 'smith@mail.com',
+        firstname: 'Max',
+        lastname: 'Smith',
+        isActive: true,
+        emailVerified: true,
+      };
+
+      const tokens = await service.getTokens(authUser);
+
+      expect(tokens).toStrictEqual({
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+      });
+    });
+  });
+
+  describe('When update refreshToken', () => {
+    it('should update refreshToken', async () => {
+      const userRefreshed = await service.updateUserRefreshToken(
+        1,
+        'newRefreshToken',
+      );
+
+      expect(userRefreshed).toStrictEqual(
+        expect.objectContaining({
+          refreshToken: expect.stringContaining(
+            '$argon2id$v=19$m=65536,t=3,p=4',
+          ),
+        }),
+      );
+    });
+  });
+
+  describe('When logging a user', () => {
+    it('should logging with an accessToken and refreshToken', async () => {
+      jest.spyOn(service, 'updateUserRefreshToken');
+
+      const authUser = {
+        id: 1,
+        email: 'smith@mail.com',
+        firstname: 'Max',
+        lastname: 'Smith',
+        isActive: true,
+        emailVerified: true,
+      };
+
+      const logginResponse = await service.loginUser(authUser);
+
+      expect(service.updateUserRefreshToken).toBeCalledWith(
+        1,
+        expect.stringContaining('eyJhb'),
+      );
+
+      expect(logginResponse).toStrictEqual({
+        accessToken: expect.stringContaining('eyJhb'),
+        refreshToken: expect.stringContaining('eyJhb'),
+        user: authUser,
+      });
     });
   });
 });

@@ -126,4 +126,24 @@ describe('UsersService', () => {
       expect(user).toBeNull();
     });
   });
+
+  describe('When update a user', () => {
+    it('should thrown an error', async () => {
+      const user = {
+        firstname: 'James Mcloud',
+      };
+
+      const updatedUser = await service.updateUser(2, user);
+      expect(updatedUser).toStrictEqual(
+        expect.objectContaining({
+          id: 2,
+          firstname: 'James Mcloud',
+          lastname: 'Robertson',
+          email: 'james@mail.com',
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        }),
+      );
+    });
+  });
 });
