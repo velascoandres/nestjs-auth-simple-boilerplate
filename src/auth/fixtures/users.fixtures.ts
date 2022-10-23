@@ -34,6 +34,18 @@ export default {
         password:
           '$argon2id$v=19$m=65536,t=3,p=4$EmfdUmsrZiA8yDC2/JsSKg$mWNzi09EinCxu1eDnqv/jA8iY6JTM3DWQQ8K9INqUWc',
       },
+      {
+        id: 4,
+        firstname: 'Reby',
+        lastname: 'Sanchez',
+        isActive: true,
+        emailVerified: true,
+        email: 'reby@mail.com',
+        password:
+          '$argon2id$v=19$m=65536,t=3,p=4$EmfdUmsrZiA8yDC2/JsSKg$mWNzi09EinCxu1eDnqv/jA8iY6JTM3DWQQ8K9INqUWc',
+        refreshToken:
+          '$argon2id$v=19$m=65536,t=3,p=4$EmfdUmsrZiA8yDC2/JsSKg$mWNzi09EinCxu1eDnqv/jA8iY6JTM3DWQQ8K9INqUWc',
+      },
     ],
   },
 };

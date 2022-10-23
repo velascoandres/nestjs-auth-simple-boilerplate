@@ -37,29 +37,7 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
   describe('When create user', () => {
-    it('should create a user with hashed password', async () => {
-      const user = {
-        firstname: 'fistname1',
-        lastname: 'lastname1',
-        email: 'mail1@test.com',
-        password: 'password12345',
-      } as CreateUserDTO;
-
-      const createdUser = await service.createUser(user);
-      expect(createdUser).toStrictEqual(
-        expect.objectContaining({
-          id: 3,
-          firstname: 'fistname1',
-          lastname: 'lastname1',
-          email: 'mail1@test.com',
-          password: expect.stringContaining('$argon2id$v=19$m=65536,t=3,p=4'),
-          createdAt: expect.any(Date),
-          updatedAt: expect.any(Date),
-        }),
-      );
-    });
-
-    it('should create a user with to lower case email', async () => {
+    it('should create a user', async () => {
       const user = {
         firstname: 'fistname1',
         lastname: 'lastname1',
@@ -73,7 +51,7 @@ describe('UsersService', () => {
           firstname: 'fistname1',
           lastname: 'lastname1',
           email: 'mail1@test.com',
-          password: expect.stringContaining('$argon2id$v=19$m=65536,t=3,p=4'),
+          password: 'password12345',
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         }),

@@ -141,8 +141,8 @@ describe('AuthService', () => {
     });
   });
 
-  describe('When logging a user', () => {
-    it('should logging with an accessToken and refreshToken', async () => {
+  describe('When signIn a user', () => {
+    it('should sign in with an accessToken and refreshToken', async () => {
       jest.spyOn(service, 'updateUserRefreshToken');
 
       const authUser = {
@@ -154,7 +154,7 @@ describe('AuthService', () => {
         emailVerified: true,
       };
 
-      const logginResponse = await service.loginUser(authUser);
+      const logginResponse = await service.signIn(authUser);
 
       expect(service.updateUserRefreshToken).toBeCalledWith(
         1,
@@ -166,6 +166,43 @@ describe('AuthService', () => {
         refreshToken: expect.stringContaining('eyJhb'),
         user: authUser,
       });
+    });
+  });
+
+  describe('When logOut a user', () => {
+    it('should  return a updated user with refreshToken null', async () => {
+      const user = await service.logOut(4);
+
+      expect(user).toStrictEqual(
+        expect.objectContaining({
+          id: 4,
+          refreshToken: null,
+        }),
+      );
+    });
+  });
+
+  describe('When signUp a user', () => {
+    it('should  return a created user with hashed password', async () => {
+      const newUser = {
+        email: 'some@mail.com',
+        password: '123',
+        firstname: 'John',
+        lastname: 'Foo',
+      };
+
+      const user = await service.signUp(newUser);
+
+      expect(user).toStrictEqual(
+        expect.objectContaining({
+          id: 5,
+          firstname: 'John',
+          lastname: 'Foo',
+          email: 'some@mail.com',
+          password: expect.stringContaining('$argon2id$v=19$m=65536,t=3,p=4'),
+          refreshToken: null,
+        }),
+      );
     });
   });
 });

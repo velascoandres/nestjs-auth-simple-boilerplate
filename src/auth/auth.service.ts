@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthTokensDTO } from './dtos/auth-tokens.dto';
 import { LogginResonseDTO } from './dtos/login-response.dto';
 import { UserEntity } from '../users/entities/user.entity';
+import { CreateUserDTO } from 'src/users/dtos/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -48,7 +49,7 @@ export class AuthService {
     return authUser;
   }
 
-  async loginUser(user: AuthUserDTO): Promise<LogginResonseDTO> {
+  async signIn(user: AuthUserDTO): Promise<LogginResonseDTO> {
     const { accessToken, refreshToken } = await this.getTokens(user);
 
     await this.updateUserRefreshToken(user.id, refreshToken);
@@ -91,5 +92,20 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  logOut(userId: number): Promise<UserEntity> {
+    return this.userService.updateUser(userId, {
+      refreshToken: null,
+    });
+  }
+
+  async signUp(user: CreateUserDTO) {
+    const hashedPassword = await argon2.hash(user.password);
+
+    return this.userService.createUser({
+      ...user,
+      password: hashedPassword,
+    });
   }
 }
