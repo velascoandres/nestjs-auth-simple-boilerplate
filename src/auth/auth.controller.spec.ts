@@ -7,6 +7,7 @@ import dbTestingUtils from '../utils/db-testing.utils';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
+import { mockEmailService } from '../utils/auth-service.mock';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -20,7 +21,7 @@ describe('AuthController', () => {
         JwtModule.register({}),
         PassportModule,
       ],
-      providers: [AuthService, UsersService],
+      providers: [AuthService, UsersService, mockEmailService()],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);

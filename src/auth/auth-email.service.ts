@@ -12,12 +12,15 @@ export class AuthEmailService {
   ) {}
 
   sendVerificationLink(email: string, username?: string) {
-    const token = this.jwtService.sign(email, {
-      secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
-      expiresIn: `${this.configService.get(
-        'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME',
-      )}s`,
-    });
+    const token = this.jwtService.sign(
+      { email },
+      {
+        secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
+        expiresIn: this.configService.get(
+          'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME',
+        ),
+      },
+    );
 
     const link = `${this.configService.get(
       'EMAIL_CONFIRMATION_URL',
@@ -25,12 +28,10 @@ export class AuthEmailService {
 
     return this.emailService.sendMail({
       to: email,
-      // from: '"Support Team" <support@example.com>', // override default from
       subject: 'Welcome to the application. To confirm the email address',
-      template: './confirmation', // `.hbs` extension is appended automatically
+      template: './confirmation',
       context: {
-        // ✏️ filling curly brackets with content
-        name: username || email,
+        username: username || email,
         link,
       },
     });

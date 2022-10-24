@@ -12,6 +12,7 @@ import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
 import usersFixtures from '../fixtures/users.fixtures';
 import { UnauthorizedException } from '@nestjs/common';
+import { mockEmailService } from '../../utils/auth-service.mock';
 
 describe('LocalStrategy tests', () => {
   let localStrategy: LocalStrategy;
@@ -36,6 +37,7 @@ describe('LocalStrategy tests', () => {
           JWT_EXPIRES: '45min',
           JWT_REFRESH_EXPIRES: '1y',
         }),
+        mockEmailService(),
       ],
     }).compile();
 

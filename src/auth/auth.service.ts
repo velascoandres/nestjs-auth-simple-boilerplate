@@ -8,13 +8,15 @@ import { AuthTokensDTO } from './dtos/auth-tokens.dto';
 import { LogginResonseDTO } from './dtos/login-response.dto';
 import { UserEntity } from '../users/entities/user.entity';
 import { CreateUserDTO } from 'src/users/dtos/create-user.dto';
+import { AuthEmailService } from './auth-email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly authEmailService: AuthEmailService,
   ) {}
 
   async validateUser(
@@ -103,9 +105,16 @@ export class AuthService {
   async signUp(user: CreateUserDTO) {
     const hashedPassword = await argon2.hash(user.password);
 
-    return this.userService.createUser({
+    const createdUser = await this.userService.createUser({
       ...user,
       password: hashedPassword,
     });
+
+    await this.authEmailService.sendVerificationLink(
+      createdUser.email,
+      createdUser.firstname,
+    );
+
+    return createdUser;
   }
 }

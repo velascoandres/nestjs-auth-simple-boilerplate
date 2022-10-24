@@ -9,11 +9,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { mockConfigService } from '../utils/config-service.mock';
+import { mockEmailService } from '../utils/auth-service.mock';
+import { AuthEmailService } from './auth-email.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let dataSource: DataSource;
   let module: TestingModule;
+  let authEmailService: AuthEmailService;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -32,11 +35,13 @@ describe('AuthService', () => {
           JWT_EXPIRES: '45min',
           JWT_REFRESH_EXPIRES: '1y',
         }),
+        mockEmailService(),
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     dataSource = module.get<DataSource>(DataSource);
+    authEmailService = module.get<AuthEmailService>(AuthEmailService);
   });
 
   afterAll(() => {
@@ -44,6 +49,8 @@ describe('AuthService', () => {
   });
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     await dbTestingUtils.loadFixtures(dataSource, usersFixtures);
   });
 
@@ -183,14 +190,14 @@ describe('AuthService', () => {
   });
 
   describe('When signUp a user', () => {
-    it('should  return a created user with hashed password', async () => {
-      const newUser = {
-        email: 'some@mail.com',
-        password: '123',
-        firstname: 'John',
-        lastname: 'Foo',
-      };
+    const newUser = {
+      email: 'some@mail.com',
+      password: '123',
+      firstname: 'John',
+      lastname: 'Foo',
+    };
 
+    it('should return a created user with hashed password', async () => {
       const user = await service.signUp(newUser);
 
       expect(user).toStrictEqual(
@@ -202,6 +209,17 @@ describe('AuthService', () => {
           password: expect.stringContaining('$argon2id$v=19$m=65536,t=3,p=4'),
           refreshToken: null,
         }),
+      );
+    });
+
+    it('should send a verification email', async () => {
+      jest.spyOn(authEmailService, 'sendVerificationLink');
+
+      await service.signUp(newUser);
+
+      expect(authEmailService.sendVerificationLink).toHaveBeenLastCalledWith(
+        'some@mail.com',
+        'John',
       );
     });
   });
