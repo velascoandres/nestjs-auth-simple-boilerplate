@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UsersService } from '../users/users.service';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { AuthUserDTO } from './dtos/auth-user.dto';
 
 @Injectable()
 export class AuthEmailService {
@@ -40,7 +41,7 @@ export class AuthEmailService {
     });
   }
 
-  validateEmailToken(token: string): string {
+  validateConfirmEmailToken(token: string): string {
     const { email } = this.jwtService.verify(token, {
       secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
     });
@@ -50,5 +51,22 @@ export class AuthEmailService {
     }
 
     throw new BadRequestException('Invalid token payload');
+  }
+
+  async verifyEmailToken(token: string): Promise<AuthUserDTO> {
+    const email = this.validateConfirmEmailToken(token);
+
+    const user = await this.usersService.markEmailAsVerified(email);
+
+    const authUser = new AuthUserDTO();
+
+    authUser.email = user.email;
+    authUser.id = user.id;
+    authUser.firstname = user.firstname;
+    authUser.lastname = user.lastname;
+    authUser.isActive = user.isActive;
+    authUser.emailVerified = user.emailVerified;
+
+    return authUser;
   }
 }

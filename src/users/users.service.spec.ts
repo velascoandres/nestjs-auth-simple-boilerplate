@@ -125,10 +125,10 @@ describe('UsersService', () => {
     });
   });
 
-  describe('When verify an user email', () => {
+  describe('When mark email as verified', () => {
     describe('When user is active', () => {
       it('should return the with email verified', async () => {
-        const user = await service.verifyEmail('carl@mail.com');
+        const user = await service.markEmailAsVerified('carl@mail.com');
 
         expect(user).toStrictEqual(
           expect.objectContaining({
@@ -140,7 +140,7 @@ describe('UsersService', () => {
     });
     describe('When user is inactive', () => {
       it('should throw an error', () => {
-        expect(service.verifyEmail('jay@mail.com')).rejects.toThrow(
+        expect(service.markEmailAsVerified('jay@mail.com')).rejects.toThrow(
           'User is not active',
         );
       });

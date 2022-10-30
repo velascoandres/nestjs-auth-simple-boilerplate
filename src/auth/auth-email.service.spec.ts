@@ -118,28 +118,48 @@ describe('AuthEmailService', () => {
     });
   });
 
-  describe('When validate an email token with valid payload', () => {
-    beforeEach(() => {
-      jest
-        .spyOn(jwtService, 'verify')
-        .mockReturnValue({ email: 'smith@mail.com' });
+  describe('When validate confirm email token', () => {
+    describe('When token has a valid payload', () => {
+      beforeEach(() => {
+        jest
+          .spyOn(jwtService, 'verify')
+          .mockReturnValue({ email: 'smith@mail.com' });
+      });
+
+      it('should return the email', () => {
+        const email = service.validateConfirmEmailToken('some-token');
+
+        expect(email).toEqual('smith@mail.com');
+      });
     });
 
-    it('should return the email', () => {
-      const email = service.validateEmailToken('some-token');
+    describe('When token has an invalid payloadd', () => {
+      beforeEach(() => {
+        jest.spyOn(jwtService, 'verify').mockReturnValue({});
+      });
 
-      expect(email).toEqual('smith@mail.com');
+      it('should throw an error', () => {
+        expect(() => service.validateConfirmEmailToken('some-token')).toThrow(
+          'Invalid token payload',
+        );
+      });
     });
   });
 
-  describe('When validate an email token with invalid payload', () => {
-    beforeEach(() => {
-      jest.spyOn(jwtService, 'verify').mockReturnValue({});
-    });
+  describe('When verify an email token', () => {
+    it('should return the updated user', async () => {
+      jest
+        .spyOn(jwtService, 'verify')
+        .mockReturnValue({ email: 'smith@mail.com' });
 
-    it('should throw an error', () => {
-      expect(() => service.validateEmailToken('some-token')).toThrow(
-        'Invalid token payload',
+      const user = await service.verifyEmailToken('some-token');
+
+      expect(user).toStrictEqual(
+        expect.objectContaining({
+          id: 1,
+          emailVerified: true,
+          email: 'smith@mail.com',
+        }),
       );
     });
   });

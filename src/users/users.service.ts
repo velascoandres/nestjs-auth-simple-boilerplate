@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
-import { BadRequestException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class UsersService {
@@ -37,7 +36,7 @@ export class UsersService {
     return this.userRespository.findOneBy({ id });
   }
 
-  async verifyEmail(email): Promise<UserEntity> {
+  async markEmailAsVerified(email): Promise<UserEntity> {
     const user = await this.findUserByEmail(email);
 
     if (!user.isActive) {
