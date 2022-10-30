@@ -1,5 +1,5 @@
 import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockConfigService } from '../utils/config-service.mock';
@@ -9,16 +9,25 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerService } from '@nestjs-modules/mailer';
 
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import dbTestingUtils from '../utils/db-testing.utils';
+import usersFixtures from './fixtures/users.fixtures';
+import { DataSource } from 'typeorm';
+import { UserEntity } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 
 describe('AuthEmailService', () => {
   let service: AuthEmailService;
   let emailService: MailerService;
+  let module: TestingModule;
+  let dataSource: DataSource;
+  let jwtService: JwtService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     jest.clearAllMocks();
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
         JwtModule.register({}),
         PassportModule,
         ConfigModule,
@@ -44,11 +53,31 @@ describe('AuthEmailService', () => {
           },
         }),
       ],
-      providers: [AuthEmailService, mockConfigService(envFixtures)],
+      providers: [
+        AuthEmailService,
+        mockConfigService(envFixtures),
+        UsersService,
+      ],
     }).compile();
 
     service = module.get<AuthEmailService>(AuthEmailService);
     emailService = module.get<MailerService>(MailerService);
+    dataSource = module.get<DataSource>(DataSource);
+    jwtService = module.get<JwtService>(JwtService);
+  });
+
+  afterAll(() => {
+    module.close();
+  });
+
+  beforeEach(async () => {
+    jest.clearAllMocks();
+
+    await dbTestingUtils.loadFixtures(dataSource, usersFixtures);
+  });
+
+  afterEach(async () => {
+    await dbTestingUtils.clearFixtures(dataSource, usersFixtures);
   });
 
   it('should be defined', () => {
@@ -86,6 +115,32 @@ describe('AuthEmailService', () => {
           link: expect.stringContaining('/auth/confirm-email?token=eyJhb'),
         },
       });
+    });
+  });
+
+  describe('When validate an email token with valid payload', () => {
+    beforeEach(() => {
+      jest
+        .spyOn(jwtService, 'verify')
+        .mockReturnValue({ email: 'smith@mail.com' });
+    });
+
+    it('should return the email', () => {
+      const email = service.validateEmailToken('some-token');
+
+      expect(email).toEqual('smith@mail.com');
+    });
+  });
+
+  describe('When validate an email token with invalid payload', () => {
+    beforeEach(() => {
+      jest.spyOn(jwtService, 'verify').mockReturnValue({});
+    });
+
+    it('should throw an error', () => {
+      expect(() => service.validateEmailToken('some-token')).toThrow(
+        'Invalid token payload',
+      );
     });
   });
 });

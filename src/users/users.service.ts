@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
+import { BadRequestException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class UsersService {
@@ -34,5 +35,17 @@ export class UsersService {
     await this.userRespository.update(id, updateUserDTO);
 
     return this.userRespository.findOneBy({ id });
+  }
+
+  async verifyEmail(email): Promise<UserEntity> {
+    const user = await this.findUserByEmail(email);
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('User is not active');
+    }
+
+    return this.updateUser(user.id, {
+      emailVerified: true,
+    });
   }
 }

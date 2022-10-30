@@ -16,7 +16,7 @@ export class UserEntity extends GenericEntity {
   password: string;
 
   @Index()
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
   @Index()

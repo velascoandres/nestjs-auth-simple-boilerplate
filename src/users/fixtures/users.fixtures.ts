@@ -17,6 +17,21 @@ export default {
         email: 'james@mail.com',
         password: 'sha12312',
       },
+      {
+        id: 3,
+        firstname: 'Carl',
+        lastname: 'Robertson',
+        email: 'carl@mail.com',
+        password: 'sha12312',
+      },
+      {
+        id: 4,
+        firstname: 'Jay',
+        lastname: 'Robertson',
+        email: 'jay@mail.com',
+        password: 'sha12312',
+        isActive: false,
+      },
     ],
   },
 };
