@@ -147,20 +147,37 @@ describe('AuthEmailService', () => {
   });
 
   describe('When verify an email token', () => {
-    it('should return the updated user', async () => {
-      jest
-        .spyOn(jwtService, 'verify')
-        .mockReturnValue({ email: 'smith@mail.com' });
+    describe('When user is active', () => {
+      beforeEach(() => {
+        jest
+          .spyOn(jwtService, 'verify')
+          .mockReturnValue({ email: 'smith@mail.com' });
+      });
 
-      const user = await service.verifyEmailToken('some-token');
+      it('should return the updated user', async () => {
+        const user = await service.verifyEmailToken('some-token');
 
-      expect(user).toStrictEqual(
-        expect.objectContaining({
-          id: 1,
-          emailVerified: true,
-          email: 'smith@mail.com',
-        }),
-      );
+        expect(user).toStrictEqual(
+          expect.objectContaining({
+            id: 1,
+            emailVerified: true,
+            email: 'smith@mail.com',
+          }),
+        );
+      });
+    });
+
+    describe('When user is inactive', () => {
+      beforeEach(() => {
+        jest
+          .spyOn(jwtService, 'verify')
+          .mockReturnValue({ email: 'jay@mail.com' });
+      });
+      it('should throw an error', () => {
+        expect(service.verifyEmailToken('jay@mail.com')).rejects.toThrow(
+          'User is not active',
+        );
+      });
     });
   });
 });

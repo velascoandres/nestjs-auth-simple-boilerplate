@@ -202,7 +202,6 @@ describe('AuthService', () => {
 
       expect(user).toStrictEqual(
         expect.objectContaining({
-          id: 5,
           firstname: 'John',
           lastname: 'Foo',
           email: 'some@mail.com',

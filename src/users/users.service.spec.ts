@@ -126,24 +126,17 @@ describe('UsersService', () => {
   });
 
   describe('When mark email as verified', () => {
-    describe('When user is active', () => {
-      it('should return the with email verified', async () => {
-        const user = await service.markEmailAsVerified('carl@mail.com');
+    it('should update user email as verified', async () => {
+      await service.markEmailAsVerified('carl@mail.com');
 
-        expect(user).toStrictEqual(
-          expect.objectContaining({
-            isActive: true,
-            emailVerified: true,
-          }),
-        );
-      });
-    });
-    describe('When user is inactive', () => {
-      it('should throw an error', () => {
-        expect(service.markEmailAsVerified('jay@mail.com')).rejects.toThrow(
-          'User is not active',
-        );
-      });
+      const user = await service.findUserByEmail('carl@mail.com');
+
+      expect(user).toStrictEqual(
+        expect.objectContaining({
+          isActive: true,
+          emailVerified: true,
+        }),
+      );
     });
   });
 });

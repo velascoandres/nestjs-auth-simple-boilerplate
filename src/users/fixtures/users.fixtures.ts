@@ -24,14 +24,6 @@ export default {
         email: 'carl@mail.com',
         password: 'sha12312',
       },
-      {
-        id: 4,
-        firstname: 'Jay',
-        lastname: 'Robertson',
-        email: 'jay@mail.com',
-        password: 'sha12312',
-        isActive: false,
-      },
     ],
   },
 };

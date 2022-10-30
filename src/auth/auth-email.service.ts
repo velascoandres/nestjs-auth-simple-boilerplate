@@ -3,7 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UsersService } from '../users/users.service';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common/exceptions';
 import { AuthUserDTO } from './dtos/auth-user.dto';
 
 @Injectable()
@@ -56,7 +59,13 @@ export class AuthEmailService {
   async verifyEmailToken(token: string): Promise<AuthUserDTO> {
     const email = this.validateConfirmEmailToken(token);
 
-    const user = await this.usersService.markEmailAsVerified(email);
+    const user = await this.usersService.findUserByEmail(email);
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('User is not active');
+    }
+
+    await this.usersService.markEmailAsVerified(email);
 
     const authUser = new AuthUserDTO();
 
@@ -65,7 +74,7 @@ export class AuthEmailService {
     authUser.firstname = user.firstname;
     authUser.lastname = user.lastname;
     authUser.isActive = user.isActive;
-    authUser.emailVerified = user.emailVerified;
+    authUser.emailVerified = true;
 
     return authUser;
   }
