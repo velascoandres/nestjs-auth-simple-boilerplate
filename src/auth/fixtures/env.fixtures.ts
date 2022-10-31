@@ -5,8 +5,11 @@ export default {
   JWT_REFRESH_EXPIRES: '1y',
   JWT_VERIFICATION_TOKEN_SECRET: '123',
   JWT_VERIFICATION_TOKEN_EXPIRATION_TIME: '21600s',
+  JWT_FORGOT_PASSWORD_TOKEN_SECRET: '123',
+  JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION_TIME: '21600s',
+  FORGOT_PASSWORD_URL: 'https://my-app.com/auth/restore-password',
   MAIL_HOST: 'smtp://provider.com',
-  EMAIL_CONFIRMATION_URL: 'http://localhost/auth/confirm-email',
+  EMAIL_CONFIRMATION_URL: 'https://localhost/auth/confirm-email',
   MAIL_USER: 'user@mail.com',
   MAIL_PASSWORD: '123',
 };

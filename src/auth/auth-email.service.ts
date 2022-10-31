@@ -86,4 +86,30 @@ export class AuthEmailService {
     }
     await this.sendVerificationLink(user.email);
   }
+
+  async sendForgotPasswordLink(email: string, username: string): Promise<void> {
+    const token = this.jwtService.sign(
+      { email },
+      {
+        secret: this.configService.get('JWT_FORGOT_PASSWORD_TOKEN_SECRET'),
+        expiresIn: this.configService.get(
+          'JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION_TIME',
+        ),
+      },
+    );
+
+    const link = `${this.configService.get(
+      'FORGOT_PASSWORD_URL',
+    )}?token=${token}`;
+
+    return this.emailService.sendMail({
+      to: email,
+      subject: 'Reset your password',
+      template: './restore-password',
+      context: {
+        username: username,
+        link,
+      },
+    });
+  }
 }

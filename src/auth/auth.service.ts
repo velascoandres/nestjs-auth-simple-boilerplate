@@ -9,6 +9,11 @@ import { LogginResonseDTO } from './dtos/login-response.dto';
 import { UserEntity } from '../users/entities/user.entity';
 import { CreateUserDTO } from 'src/users/dtos/create-user.dto';
 import { AuthEmailService } from './auth-email.service';
+import {
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common/exceptions';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -116,5 +121,29 @@ export class AuthService {
     );
 
     return createdUser;
+  }
+
+  async forgotPassword(email: string): Promise<boolean> {
+    const user = await this.userService.findUserByEmail(email);
+
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('User is inactive');
+    }
+
+    if (!user.emailVerified) {
+      throw new BadRequestException('Email is not verified');
+    }
+
+    const { firstname, lastname } = user;
+
+    const username = `${firstname} ${lastname}`;
+
+    await this.authEmailService.sendForgotPasswordLink(email, username);
+
+    return true;
   }
 }

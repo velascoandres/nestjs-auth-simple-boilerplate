@@ -222,4 +222,48 @@ describe('AuthService', () => {
       );
     });
   });
+
+  describe('When forgot password', () => {
+    describe('When user is active', () => {
+      it('should call sendForgotPasswordLink', async () => {
+        jest.spyOn(authEmailService, 'sendForgotPasswordLink');
+
+        const email = 'reby@mail.com';
+
+        await service.forgotPassword(email);
+
+        expect(authEmailService.sendForgotPasswordLink).toHaveBeenCalledWith(
+          email,
+          'Reby Sanchez',
+        );
+      });
+    });
+
+    describe('When user does not exist', () => {
+      it('should throw an error', () => {
+        const email = 'other.user@mail.com';
+
+        expect(service.forgotPassword(email)).rejects.toThrow('User not found');
+      });
+    });
+
+    describe('When email is not verified', () => {
+      it('should throw an error', () => {
+        const email = 'rebecca@mail.com';
+
+        expect(service.forgotPassword(email)).rejects.toThrow(
+          'Email is not verified',
+        );
+      });
+    });
+    describe('When user is inactive', () => {
+      it('should throw an error', () => {
+        const email = 'jay@mail.com';
+
+        expect(service.forgotPassword(email)).rejects.toThrow(
+          'User is inactive',
+        );
+      });
+    });
+  });
 });

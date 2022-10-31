@@ -212,4 +212,22 @@ describe('AuthEmailService', () => {
       });
     });
   });
+
+  describe('When send a restore password link', () => {
+    it('should send an email confirmation link', async () => {
+      jest.spyOn(emailService, 'sendMail').mockImplementation(jest.fn());
+
+      await service.sendForgotPasswordLink('some@mail.com', 'username1');
+
+      expect(emailService.sendMail).toHaveBeenCalledWith({
+        to: 'some@mail.com',
+        subject: 'Reset your password',
+        template: './restore-password',
+        context: {
+          username: 'username1',
+          link: expect.stringContaining('/auth/restore-password?token=eyJhb'),
+        },
+      });
+    });
+  });
 });
