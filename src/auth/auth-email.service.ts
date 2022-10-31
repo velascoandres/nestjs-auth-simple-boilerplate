@@ -78,4 +78,12 @@ export class AuthEmailService {
 
     return authUser;
   }
+
+  async resendConfirmationLink(email: string): Promise<void> {
+    const user = await this.usersService.findUserByEmail(email);
+    if (user.emailVerified) {
+      throw new BadRequestException('Email has been verified');
+    }
+    await this.sendVerificationLink(user.email);
+  }
 }

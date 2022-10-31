@@ -180,4 +180,36 @@ describe('AuthEmailService', () => {
       });
     });
   });
+
+  describe('When resend a verification email', () => {
+    describe('When email is not verified', () => {
+      beforeEach(() => {
+        jest.spyOn(emailService, 'sendMail').mockImplementation(jest.fn());
+      });
+
+      it('should resend the email', async () => {
+        const pendingEmail = 'rebecca@mail.com';
+        await service.resendConfirmationLink(pendingEmail);
+
+        expect(emailService.sendMail).toHaveBeenCalledWith({
+          to: 'rebecca@mail.com',
+          subject: 'Welcome to the application. To confirm the email address',
+          template: './confirmation',
+          context: {
+            username: 'rebecca@mail.com',
+            link: expect.stringContaining('/auth/confirm-email?token=eyJhb'),
+          },
+        });
+      });
+    });
+    describe('When email is verified', () => {
+      it('should resend the email', () => {
+        const pendingEmail = 'reby@mail.com';
+
+        expect(service.resendConfirmationLink(pendingEmail)).rejects.toThrow(
+          'Email has been verified',
+        );
+      });
+    });
+  });
 });
