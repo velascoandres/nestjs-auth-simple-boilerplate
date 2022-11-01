@@ -11,7 +11,6 @@ import { ConfigModule } from '@nestjs/config';
 import { mockConfigService } from '../utils/config-service.mock';
 import { mockEmailService } from '../utils/auth-service.mock';
 import { AuthEmailService } from './auth-email.service';
-import { flatten } from "@nestjs/common";
 
 describe('AuthService', () => {
   let service: AuthService;
