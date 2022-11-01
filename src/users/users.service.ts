@@ -9,35 +9,43 @@ import { UpdateUserDTO } from './dtos/update-user.dto';
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRespository: Repository<UserEntity>,
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async createUser(createUserDto: CreateUserDTO): Promise<UserEntity> {
-    return this.userRespository.save({
+    return this.userRepository.save({
       ...createUserDto,
       email: createUserDto.email.toLowerCase(),
     });
   }
 
   countUsers(): Promise<number> {
-    return this.userRespository.count();
+    return this.userRepository.count();
   }
 
   findUserByEmail(email: string): Promise<UserEntity | null> {
-    return this.userRespository.findOneBy({ email: email.toLowerCase() });
+    return this.userRepository.findOneBy({ email: email.toLowerCase() });
+  }
+
+  findUserById(userId: number): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy({ id: userId });
   }
 
   async updateUser(
     id: number,
     updateUserDTO: UpdateUserDTO,
   ): Promise<UserEntity> {
-    await this.userRespository.update(id, updateUserDTO);
+    await this.userRepository.update(id, updateUserDTO);
 
-    return this.userRespository.findOneBy({ id });
+    return this.userRepository.findOneBy({ id });
+  }
+
+  async updatePassword(id: number, newPassword: string): Promise<void> {
+    await this.userRepository.update(id, { password: newPassword });
   }
 
   async markEmailAsVerified(email): Promise<void> {
-    await this.userRespository.update(
+    await this.userRepository.update(
       { email },
       {
         emailVerified: true,

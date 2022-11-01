@@ -139,4 +139,29 @@ describe('UsersService', () => {
       );
     });
   });
+
+  describe('When find user by id', () => {
+    it('should return user', async () => {
+      const user = await service.findUserById(2);
+
+      expect(user).toStrictEqual(
+        expect.objectContaining({
+          id: 2,
+          email: 'james@mail.com',
+        }),
+      );
+    });
+  });
+
+  describe('When update user password', () => {
+    it('should updated password be different than old password', async () => {
+      const userBeforeUpdate = await service.findUserById(2);
+
+      await service.updatePassword(2, 'newPassword');
+
+      const updatedUser = await service.findUserById(2);
+
+      expect(userBeforeUpdate.password).not.toBe(updatedUser.password);
+    });
+  });
 });

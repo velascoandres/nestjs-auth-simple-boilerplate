@@ -17,6 +17,7 @@ describe('AuthService', () => {
   let dataSource: DataSource;
   let module: TestingModule;
   let authEmailService: AuthEmailService;
+  let usersService: UsersService;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -42,6 +43,7 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
     dataSource = module.get<DataSource>(DataSource);
     authEmailService = module.get<AuthEmailService>(AuthEmailService);
+    usersService = module.get<UsersService>(UsersService);
   });
 
   afterAll(() => {
@@ -161,14 +163,14 @@ describe('AuthService', () => {
         emailVerified: true,
       };
 
-      const logginResponse = await service.signIn(authUser);
+      const loginResponse = await service.signIn(authUser);
 
       expect(service.updateUserRefreshToken).toBeCalledWith(
         1,
         expect.stringContaining('eyJhb'),
       );
 
-      expect(logginResponse).toStrictEqual({
+      expect(loginResponse).toStrictEqual({
         accessToken: expect.stringContaining('eyJhb'),
         refreshToken: expect.stringContaining('eyJhb'),
         user: authUser,
@@ -263,6 +265,35 @@ describe('AuthService', () => {
         expect(service.forgotPassword(email)).rejects.toThrow(
           'User is inactive',
         );
+      });
+    });
+  });
+
+  describe('When reset password', () => {
+    describe('When current password does not match', () => {
+      it('should throws an error', () => {
+        const resetPasswordDTO = {
+          oldPassword: '124',
+          newPassword: '12345',
+        };
+        expect(service.resetPassword(1, resetPasswordDTO)).rejects.toThrow(
+          'Password is not correct',
+        );
+      });
+    });
+
+    describe('When password matches', () => {
+      it('should update user password', async () => {
+        jest.spyOn(usersService, 'updatePassword');
+
+        const resetPasswordDTO = {
+          oldPassword: 'password12345',
+          newPassword: 'newPassword12345',
+        };
+
+        await service.resetPassword(4, resetPasswordDTO);
+
+        expect(usersService.updatePassword).toBeCalled();
       });
     });
   });

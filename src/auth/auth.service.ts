@@ -14,6 +14,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
 import { NotFoundError } from 'rxjs';
+import { ResetPasswordDTO } from './dtos/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -143,6 +144,25 @@ export class AuthService {
     const username = `${firstname} ${lastname}`;
 
     await this.authEmailService.sendForgotPasswordLink(email, username);
+
+    return true;
+  }
+
+  async resetPassword(userId: number, resetPasswordDTO: ResetPasswordDTO) {
+    const user = await this.userService.findUserById(userId);
+
+    const matchPasswords = await argon2.verify(
+      user.password,
+      resetPasswordDTO.oldPassword,
+    );
+
+    if (!matchPasswords) {
+      throw new BadRequestException('Password is not correct');
+    }
+
+    const hashedPassword = await argon2.hash(user.password);
+
+    await this.userService.updatePassword(userId, hashedPassword);
 
     return true;
   }
