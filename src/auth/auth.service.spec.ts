@@ -11,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { mockConfigService } from '../utils/config-service.mock';
 import { mockEmailService } from '../utils/auth-service.mock';
 import { AuthEmailService } from './auth-email.service';
+import { flatten } from "@nestjs/common";
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -66,7 +67,7 @@ describe('AuthService', () => {
 
   describe('When validate user with email and password', () => {
     it('should return the user if credentials are right', async () => {
-      const user = await service.validateUser(
+      const user = await service.validateUserEmailPassword(
         'smith@mail.com',
         'password12345',
       );
@@ -86,7 +87,7 @@ describe('AuthService', () => {
     });
 
     it('should return null if credentials are wrong', async () => {
-      const user = await service.validateUser(
+      const user = await service.validateUserEmailPassword(
         'smith@mail.com',
         'password123452',
       );
@@ -95,7 +96,7 @@ describe('AuthService', () => {
     });
 
     it('should return null if user is inactive', async () => {
-      const user = await service.validateUser(
+      const user = await service.validateUserEmailPassword(
         'sanchezr@mail.com',
         'password12345',
       );
@@ -104,7 +105,7 @@ describe('AuthService', () => {
     });
 
     it('should return null if user email has not been verified', async () => {
-      const user = await service.validateUser(
+      const user = await service.validateUserEmailPassword(
         'rebecca@mail.com',
         'password12345',
       );
@@ -147,6 +148,41 @@ describe('AuthService', () => {
           ),
         }),
       );
+    });
+  });
+
+  describe('When refresh tokens (access and refresh)', () => {
+    describe('When user not exist', () => {
+      it('should throws an error', () => {
+        expect(service.refreshTokens(10, 'some-refresh-token')).rejects.toThrow(
+          'Access Denied (User info not found)',
+        );
+      });
+    });
+    describe('When user does not have a refresh token', () => {
+      it('should throws an error', () => {
+        expect(service.refreshTokens(2, 'some-refresh-token')).rejects.toThrow(
+          'Access Denied (User info not found)',
+        );
+      });
+    });
+    describe('When refresh token does not match', () => {
+      it('should throw an error', () => {
+        expect(service.refreshTokens(4, 'some-invalid-token')).rejects.toThrow(
+          'Access Denied',
+        );
+      });
+    });
+    describe('When refresh token matches', () => {
+      it('should return the refreshed tokens', async () => {
+        const { accessToken, refreshToken } = await service.refreshTokens(
+          4,
+          'some-refresh-token',
+        );
+
+        expect(accessToken).toContain('eyJhbGci');
+        expect(refreshToken).toContain('eyJhbGci');
+      });
     });
   });
 
@@ -207,8 +243,8 @@ describe('AuthService', () => {
           firstname: 'John',
           lastname: 'Foo',
           email: 'some@mail.com',
-          password: expect.stringContaining('$argon2id$v=19$m=65536,t=3,p=4'),
-          refreshToken: null,
+          emailVerified: false,
+          isActive: true,
         }),
       );
     });

@@ -1,7 +1,7 @@
-import { AuthUserDTO } from './auth-user.dto';
+import { IAuthUser } from '../types/auth-user';
 
-export class LogginResonseDTO {
+export class LoginResponseDTO {
   accessToken: string;
   refreshToken: string;
-  user: AuthUserDTO;
+  user: IAuthUser;
 }

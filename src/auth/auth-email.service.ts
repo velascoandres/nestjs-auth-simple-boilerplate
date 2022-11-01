@@ -7,7 +7,7 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
-import { AuthUserDTO } from './dtos/auth-user.dto';
+import { IAuthUser } from './types/auth-user';
 
 @Injectable()
 export class AuthEmailService {
@@ -56,7 +56,7 @@ export class AuthEmailService {
     throw new BadRequestException('Invalid token payload');
   }
 
-  async verifyEmailToken(token: string): Promise<AuthUserDTO> {
+  async verifyEmailToken(token: string): Promise<IAuthUser> {
     const email = this.validateConfirmEmailToken(token);
 
     const user = await this.usersService.findUserByEmail(email);
@@ -67,16 +67,14 @@ export class AuthEmailService {
 
     await this.usersService.markEmailAsVerified(email);
 
-    const authUser = new AuthUserDTO();
-
-    authUser.email = user.email;
-    authUser.id = user.id;
-    authUser.firstname = user.firstname;
-    authUser.lastname = user.lastname;
-    authUser.isActive = user.isActive;
-    authUser.emailVerified = true;
-
-    return authUser;
+    return {
+      id: user.id,
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      isActive: user.isActive,
+      emailVerified: true,
+    };
   }
 
   async resendConfirmationLink(email: string): Promise<void> {

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
-import { AuthUserDTO } from './dtos/auth-user.dto';
+import { IAuthUser } from './types/auth-user';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthTokensDTO } from './dtos/auth-tokens.dto';
-import { LogginResonseDTO } from './dtos/login-response.dto';
+import { LoginResponseDTO } from './dtos/login-response.dto';
 import { UserEntity } from '../users/entities/user.entity';
 import { CreateUserDTO } from 'src/users/dtos/create-user.dto';
 import { AuthEmailService } from './auth-email.service';
@@ -25,10 +25,10 @@ export class AuthService {
     private readonly authEmailService: AuthEmailService,
   ) {}
 
-  async validateUser(
+  async validateUserEmailPassword(
     email: string,
     password: string,
-  ): Promise<AuthUserDTO | null> {
+  ): Promise<IAuthUser | null> {
     const user = await this.userService.findUserByEmail(email);
 
     if (!user.isActive) {
@@ -45,19 +45,10 @@ export class AuthService {
       return null;
     }
 
-    const authUser = new AuthUserDTO();
-
-    authUser.email = user.email;
-    authUser.id = user.id;
-    authUser.firstname = user.firstname;
-    authUser.lastname = user.lastname;
-    authUser.isActive = user.isActive;
-    authUser.emailVerified = user.emailVerified;
-
-    return authUser;
+    return this.getAuthUser(user);
   }
 
-  async signIn(user: AuthUserDTO): Promise<LogginResonseDTO> {
+  async signIn(user: IAuthUser): Promise<LoginResponseDTO> {
     const { accessToken, refreshToken } = await this.getTokens(user);
 
     await this.updateUserRefreshToken(user.id, refreshToken);
@@ -80,7 +71,34 @@ export class AuthService {
     });
   }
 
-  async getTokens(authUser: AuthUserDTO): Promise<AuthTokensDTO> {
+  async refreshTokens(
+    userId: number,
+    refreshToken: string,
+  ): Promise<AuthTokensDTO> {
+    const user = await this.userService.findUserById(userId);
+
+    if (!user || !user.refreshToken) {
+      throw new ForbiddenException('Access Denied (User info not found)');
+    }
+
+    const refreshTokenMatches = await argon2.verify(
+      user.refreshToken,
+      refreshToken,
+    );
+    if (!refreshTokenMatches) {
+      throw new ForbiddenException('Access Denied');
+    }
+
+    const authUser = this.getAuthUser(user);
+
+    const tokens = await this.getTokens(authUser);
+
+    await this.updateUserRefreshToken(user.id, tokens.refreshToken);
+
+    return tokens;
+  }
+
+  async getTokens(authUser: IAuthUser): Promise<AuthTokensDTO> {
     const accessTokenResponse = this.jwtService.signAsync(authUser, {
       secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       expiresIn: this.configService.get<string>('JWT_EXPIRES'),
@@ -108,7 +126,7 @@ export class AuthService {
     });
   }
 
-  async signUp(user: CreateUserDTO) {
+  async signUp(user: CreateUserDTO): Promise<IAuthUser> {
     const hashedPassword = await argon2.hash(user.password);
 
     const createdUser = await this.userService.createUser({
@@ -121,7 +139,7 @@ export class AuthService {
       createdUser.firstname,
     );
 
-    return createdUser;
+    return this.getAuthUser(createdUser);
   }
 
   async forgotPassword(email: string): Promise<boolean> {
@@ -165,5 +183,16 @@ export class AuthService {
     await this.userService.updatePassword(userId, hashedPassword);
 
     return true;
+  }
+
+  private getAuthUser(user: UserEntity) {
+    return {
+      email: user.email,
+      id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      isActive: user.isActive,
+      emailVerified: user.emailVerified,
+    };
   }
 }
