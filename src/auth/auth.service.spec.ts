@@ -329,7 +329,35 @@ describe('AuthService', () => {
         await service.resetPassword(4, resetPasswordDTO);
 
         expect(usersService.updatePassword).toBeCalled();
+
+        const authUser = await service.validateUserEmailPassword(
+          'reby@mail.com',
+          'newPassword12345',
+        );
+
+        expect(authUser.id).toBe(4);
+        expect(authUser.email).toBe('reby@mail.com');
       });
+    });
+  });
+
+  describe('When change forgotten password', () => {
+    it('should change password', async () => {
+      const user = {
+        id: 4,
+        email: 'reby@mail.com',
+      };
+      const response = await service.changePassword(user.id, 'newPassword');
+
+      expect(response).toBe(true);
+
+      const authUser = await service.validateUserEmailPassword(
+        user.email,
+        'newPassword',
+      );
+
+      expect(authUser.id).toBe(4);
+      expect(authUser.email).toBe('reby@mail.com');
     });
   });
 });

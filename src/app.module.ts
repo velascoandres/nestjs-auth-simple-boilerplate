@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { AuthEmailController } from './auth/auth-email.controller';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthEmailController],
   providers: [AppService],
 })
 export class AppModule {}

@@ -178,7 +178,11 @@ export class AuthService {
       throw new BadRequestException('Password is not correct');
     }
 
-    const hashedPassword = await argon2.hash(user.password);
+    return this.changePassword(userId, resetPasswordDTO.newPassword);
+  }
+
+  async changePassword(userId: number, newPassword: string) {
+    const hashedPassword = await argon2.hash(newPassword);
 
     await this.userService.updatePassword(userId, hashedPassword);
 
