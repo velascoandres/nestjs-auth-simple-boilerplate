@@ -111,6 +111,52 @@ describe('AuthService', () => {
 
       expect(user).toBe(null);
     });
+
+    it('should return null if user does not exist', async () => {
+      const user = await service.validateUserEmailPassword(
+        'rebecca111@mail.com',
+        'password12345232',
+      );
+
+      expect(user).toBe(null);
+    });
+  });
+
+  describe('When validate user by id', () => {
+    it('should return the user if credentials are right', async () => {
+      const user = await service.validateUserById(1);
+
+      expect(user).toStrictEqual(
+        expect.objectContaining({
+          id: 1,
+          email: 'smith@mail.com',
+          firstname: 'Max',
+          lastname: 'Smith',
+          isActive: true,
+          emailVerified: true,
+        }),
+      );
+
+      expect(user).not.toHaveProperty('password');
+    });
+
+    it('should return null if user is inactive', async () => {
+      const user = await service.validateUserById(5);
+
+      expect(user).toBe(null);
+    });
+
+    it('should return null if user email has not been verified', async () => {
+      const user = await service.validateUserById(3);
+
+      expect(user).toBe(null);
+    });
+
+    it('should return null if user does not exist', async () => {
+      const user = await service.validateUserById(50);
+
+      expect(user).toBe(null);
+    });
   });
 
   describe('When generate tokens', () => {

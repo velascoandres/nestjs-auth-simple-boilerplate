@@ -31,6 +31,10 @@ export class AuthService {
   ): Promise<IAuthUser | null> {
     const user = await this.userService.findUserByEmail(email);
 
+    if (!user) {
+      return null;
+    }
+
     if (!user.isActive) {
       return null;
     }
@@ -42,6 +46,24 @@ export class AuthService {
     const matchPasswords = await argon2.verify(user.password, password);
 
     if (!matchPasswords) {
+      return null;
+    }
+
+    return this.getAuthUser(user);
+  }
+
+  async validateUserById(userId: number): Promise<IAuthUser | null> {
+    const user = await this.userService.findUserById(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    if (!user.isActive) {
+      return null;
+    }
+
+    if (!user.emailVerified) {
       return null;
     }
 

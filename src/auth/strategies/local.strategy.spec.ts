@@ -11,7 +11,7 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
 import usersFixtures from '../fixtures/users.fixtures';
-import { UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { mockEmailService } from '../../utils/auth-service.mock';
 
 describe('LocalStrategy tests', () => {
@@ -85,7 +85,7 @@ describe('LocalStrategy tests', () => {
     it('should thrown an exception', async () => {
       await expect(
         localStrategy.validate('smith@mail.com', 'not-valid-passwod'),
-      ).rejects.toThrow(new UnauthorizedException('User not valid'));
+      ).rejects.toThrow(new ForbiddenException('User not valid'));
     });
   });
 });

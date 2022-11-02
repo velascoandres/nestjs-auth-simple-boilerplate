@@ -52,4 +52,9 @@ export class AuthController {
   ) {
     return this.authService.changePassword(user.id, password);
   }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('logout')
+  logOut(@Req() { user }: IAuthRequest) {
+    return this.authService.logOut(user.id);
+  }
 }
