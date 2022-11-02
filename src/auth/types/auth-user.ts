@@ -7,6 +7,6 @@ export interface IAuthUser {
   emailVerified: boolean;
 }
 
-export interface IAuthUserRefreshToken extends IAuthUser{
+export interface IAuthUserRefreshToken extends IAuthUser {
   refreshToken: string;
 }
