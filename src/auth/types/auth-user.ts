@@ -6,3 +6,7 @@ export interface IAuthUser {
   isActive: boolean;
   emailVerified: boolean;
 }
+
+export interface IAuthUserRefreshToken extends IAuthUser{
+  refreshToken: string;
+}

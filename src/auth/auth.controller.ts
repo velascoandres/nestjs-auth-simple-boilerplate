@@ -44,7 +44,7 @@ export class AuthController {
     return this.authService.resetPassword(user.id, resetPasswordDTO);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt-forgot-password'))
   @Post('change-forgotten-password')
   changeForgottenPassword(
     @Req() { user }: IAuthRequest,

@@ -1,11 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { IAuthUser } from '../types/auth-user';
-import { UsersService } from '../../users/users.service';
-import { UserEntity } from '../../users/entities/user.entity';
+import { IAuthUser, IAuthUserRefreshToken } from '../types/auth-user';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -13,7 +12,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
     private readonly configService: ConfigService,
   ) {
     super({
@@ -24,10 +23,13 @@ export class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req: Request, { id }: IAuthUser): Promise<UserEntity> {
-    const user = await this.usersService.findUserById(id);
+  async validate(
+    req: Request,
+    { id }: IAuthUser,
+  ): Promise<IAuthUserRefreshToken> {
+    const user = await this.authService.validateUserById(id);
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new ForbiddenException('User not valid');
     }
 
     const refreshToken = req.get('Authorization').replace('Bearer', '').trim();
