@@ -19,7 +19,6 @@ describe('EmailVerifiedGuard', () => {
       it('should return true', () => {
         const mockContext = createMock<ExecutionContext>();
         mockContext.switchToHttp().getRequest.mockReturnValue({
-          // method attached to `req` instance by Passport lib
           user: {
             emailVerified: true,
           },
@@ -35,7 +34,6 @@ describe('EmailVerifiedGuard', () => {
       it('should throw an error', () => {
         const mockContext = createMock<ExecutionContext>();
         mockContext.switchToHttp().getRequest.mockReturnValue({
-          // method attached to `req` instance by Passport lib
           user: {
             emailVerified: false,
           },
