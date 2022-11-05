@@ -9,6 +9,7 @@ import { IAuthUser } from './types/auth-user';
 import { EmailDTO } from './dtos/email.dto';
 import { ResetPasswordDTO } from './dtos/reset-password.dto';
 import { PasswordDTO } from './dtos/password.dto';
+import { AccountVerified } from './decorators/account-verified';
 
 @Controller('auth')
 export class AuthController {
@@ -18,13 +19,13 @@ export class AuthController {
     return this.authService.signUp(createUserDto);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @AccountVerified('local')
   @Post('sign-in')
   signIn(@Req() authRequest: IAuthRequest): Promise<LoginResponseDTO> {
     return this.authService.signIn(authRequest.user);
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
+  @AccountVerified('jwt-refresh')
   @Post('refresh-token')
   refreshToken(@Req() { user }: IAuthRequest): Promise<AuthTokensDTO> {
     return this.authService.refreshTokens(user.id, user.refreshToken);
@@ -35,7 +36,7 @@ export class AuthController {
     return this.authService.forgotPassword(email);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @AccountVerified('jwt')
   @Post('reset-password')
   resetPassword(
     @Req() { user }: IAuthRequest,
@@ -44,7 +45,7 @@ export class AuthController {
     return this.authService.resetPassword(user.id, resetPasswordDTO);
   }
 
-  @UseGuards(AuthGuard('jwt-forgot-password'))
+  @AccountVerified('jwt-forgot-password')
   @Post('change-forgotten-password')
   changeForgottenPassword(
     @Req() { user }: IAuthRequest,

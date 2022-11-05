@@ -35,9 +35,7 @@ describe('JwtStrategy tests', () => {
         JwtStrategy,
         mockConfigService({
           JWT_ACCESS_SECRET: '123',
-          JWT_REFRESH_SECRET: '1234',
           JWT_EXPIRES: '45min',
-          JWT_REFRESH_EXPIRES: '1y',
         }),
         mockEmailService(),
       ],
@@ -64,7 +62,7 @@ describe('JwtStrategy tests', () => {
   });
 
   describe('When validate a user', () => {
-    describe('When user is active', () => {
+    describe('When user is valid', () => {
       it('should return the user', async () => {
         const authUser = {
           id: 1,
@@ -91,22 +89,7 @@ describe('JwtStrategy tests', () => {
         expect(user).not.toHaveProperty('password');
       });
     });
-    describe('When user does not exist', () => {
-      it('should thrown an exception', async () => {
-        const authUser = {
-          id: 10,
-          email: 'smithB@mail.com',
-          firstname: 'James',
-          lastname: 'Smith',
-          isActive: true,
-          emailVerified: true,
-        };
-        await expect(jwtStrategy.validate(authUser)).rejects.toThrow(
-          new ForbiddenException('User not valid'),
-        );
-      });
-    });
-    describe('When user is inactive', () => {
+    describe('When user is null', () => {
       it('should thrown an exception', async () => {
         const authUser = {
           id: 5,
@@ -115,21 +98,6 @@ describe('JwtStrategy tests', () => {
           email: 'jay@mail.com',
           isActive: false,
           emailVerified: false,
-        };
-        await expect(jwtStrategy.validate(authUser)).rejects.toThrow(
-          new ForbiddenException('User not valid'),
-        );
-      });
-    });
-    describe('When email is not verified', () => {
-      it('should thrown an exception', async () => {
-        const authUser = {
-          id: 3,
-          firstname: 'Rebecca',
-          lastname: 'Sanchez',
-          isActive: true,
-          emailVerified: false,
-          email: 'rebecca@mail.com',
         };
         await expect(jwtStrategy.validate(authUser)).rejects.toThrow(
           new ForbiddenException('User not valid'),

@@ -39,10 +39,6 @@ export class AuthService {
       return null;
     }
 
-    if (!user.emailVerified) {
-      return null;
-    }
-
     const matchPasswords = await argon2.verify(user.password, password);
 
     if (!matchPasswords) {
@@ -60,10 +56,6 @@ export class AuthService {
     }
 
     if (!user.isActive) {
-      return null;
-    }
-
-    if (!user.emailVerified) {
       return null;
     }
 

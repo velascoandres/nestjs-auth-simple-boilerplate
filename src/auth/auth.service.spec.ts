@@ -103,15 +103,6 @@ describe('AuthService', () => {
       expect(user).toBe(null);
     });
 
-    it('should return null if user email has not been verified', async () => {
-      const user = await service.validateUserEmailPassword(
-        'rebecca@mail.com',
-        'password12345',
-      );
-
-      expect(user).toBe(null);
-    });
-
     it('should return null if user does not exist', async () => {
       const user = await service.validateUserEmailPassword(
         'rebecca111@mail.com',
@@ -142,12 +133,6 @@ describe('AuthService', () => {
 
     it('should return null if user is inactive', async () => {
       const user = await service.validateUserById(5);
-
-      expect(user).toBe(null);
-    });
-
-    it('should return null if user email has not been verified', async () => {
-      const user = await service.validateUserById(3);
 
       expect(user).toBe(null);
     });
