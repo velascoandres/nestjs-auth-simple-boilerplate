@@ -167,10 +167,6 @@ export class AuthService {
       throw new UnauthorizedException('User is inactive');
     }
 
-    if (!user.emailVerified) {
-      throw new BadRequestException('Email is not verified');
-    }
-
     const { firstname, lastname } = user;
 
     const username = `${firstname} ${lastname}`;

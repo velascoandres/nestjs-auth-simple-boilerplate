@@ -314,16 +314,6 @@ describe('AuthService', () => {
         expect(service.forgotPassword(email)).rejects.toThrow('User not found');
       });
     });
-
-    describe('When email is not verified', () => {
-      it('should throw an error', () => {
-        const email = 'rebecca@mail.com';
-
-        expect(service.forgotPassword(email)).rejects.toThrow(
-          'Email is not verified',
-        );
-      });
-    });
     describe('When user is inactive', () => {
       it('should throw an error', () => {
         const email = 'jay@mail.com';
