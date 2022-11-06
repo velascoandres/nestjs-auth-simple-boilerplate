@@ -1,0 +1,50 @@
+<html>
+<head>
+  <title>Confirm email</title>
+</head>
+<body>
+<main>
+  <section id="success-message">
+    <div>
+      <p>
+        Your email was successfully verified
+      </p>
+    </div>
+  </section>
+
+
+  <section id="error-message">
+    <div>
+      Error on verify account
+    </div>
+  </section>
+
+</main>
+<script>
+  const token = "{{token}}"
+
+  const successSection = document.getElementById('success-message');
+  const errorSection = document.getElementById('error-message');
+  successSection.hidden = true;
+  errorSection.hidden = true;
+
+  const verifyEmail = async () => {
+
+    fetch(`/auth/email/verify?token=${token}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data){
+          successSection.hidden = false;
+        } else {
+          errorSection.hidden = false;
+        }
+      })
+      .catch(_ => {
+        errorSection.hidden = false;
+      });
+  }
+
+  verifyEmail();
+</script>
+</body>
+</html>

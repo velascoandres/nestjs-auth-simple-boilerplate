@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { AuthEmailController } from './auth/auth-email.controller';
 
 @Module({
   imports: [
@@ -13,6 +12,7 @@ import { AuthEmailController } from './auth/auth-email.controller';
     UsersModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -29,7 +29,7 @@ import { AuthEmailController } from './auth/auth-email.controller';
       inject: [ConfigService],
     }),
   ],
-  controllers: [AppController, AuthEmailController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

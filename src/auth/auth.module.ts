@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthEmailService } from './auth-email.service';
-import commonImports from './config/common-imports';
+import commonImports from './common-imports';
 import { AuthEmailController } from './auth-email.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
