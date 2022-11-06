@@ -17,7 +17,7 @@ export class AuthEmailController {
   }
 
   @Post('resend-confirmation-link')
-  resendConfirmationLink(@Body('token') { email }: EmailDTO) {
+  resendConfirmationLink(@Body() { email }: EmailDTO) {
     return this.authEmailService.resendConfirmationLink(email);
   }
 }
