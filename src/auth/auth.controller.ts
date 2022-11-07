@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Render, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
@@ -14,6 +14,12 @@ import { AccountVerified } from './decorators/account-verified';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('/restore-password')
+  @Render('restore-password')
+  renderRestorePassword(@Query('token') token: string) {
+    return { token };
+  }
   @Post('sign-up')
   signUp(@Body() createUserDto: CreateUserDTO): Promise<IAuthUser> {
     return this.authService.signUp(createUserDto);

@@ -25,23 +25,24 @@
 
   const successSection = document.getElementById('success-message');
   const errorSection = document.getElementById('error-message');
-  successSection.hidden = true;
-  errorSection.hidden = true;
+  successSection.style.display = 'none';
+  errorSection.style.display = 'none';
 
   const verifyEmail = async () => {
+    try {
+      const response = await fetch(`/api/auth/email/verify?token=${token}`);
 
-    fetch(`/auth/email/verify?token=${token}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data){
-          successSection.hidden = false;
-        } else {
-          errorSection.hidden = false;
-        }
-      })
-      .catch(_ => {
-        errorSection.hidden = false;
-      });
+      if(response.status !== 200) {
+        errorSection.style.display = 'block';
+
+        return;
+      }
+
+      successSection.style.display = 'block';
+
+    } catch (e) {
+      errorSection.style.display = 'block';
+    }
   }
 
   verifyEmail();
