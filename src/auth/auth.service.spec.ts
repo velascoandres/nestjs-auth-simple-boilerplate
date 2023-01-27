@@ -381,4 +381,53 @@ describe('AuthService', () => {
       expect(authUser.email).toBe('reby@mail.com');
     });
   });
+
+  describe('When handle a email address update', () => {
+    describe('When user credentials are ok and new email is available', () => {
+      it('should call sendNewEmailVerificationLink', async () => {
+        jest.spyOn(authEmailService, 'sendNewEmailVerificationLink');
+
+        const response = await service.handleEmailUpdate(4, {
+          newEmail: 'new-reby@mail.com',
+          password: 'password12345',
+        });
+
+        expect(response).toBe(true);
+
+        expect(
+          authEmailService.sendNewEmailVerificationLink,
+        ).toHaveBeenCalledWith(
+          {
+            email: 'reby@mail.com',
+            newEmail: 'new-reby@mail.com',
+          },
+          'Reby Sanchez',
+        );
+      });
+    });
+
+    describe('When user credentials are wrong', () => {
+      it('should throw an error', async () => {
+        expect(
+          service.handleEmailUpdate(4, {
+            newEmail: 'new-reby@mail.com',
+            password: 'invalid-password',
+          }),
+        ).rejects.toThrow('Password is not correct');
+      });
+    });
+
+    describe('When user credentials are ok and email was taken by another user', () => {
+      it('should throw an error', async () => {
+        try {
+          await service.handleEmailUpdate(4, {
+            newEmail: 'smith@mail.com',
+            password: 'password12345',
+          });
+        } catch (error) {
+          expect(error.message).toBe('Email has been taken by another user');
+        }
+      });
+    });
+  });
 });

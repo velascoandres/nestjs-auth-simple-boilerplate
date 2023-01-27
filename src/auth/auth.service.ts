@@ -1,3 +1,4 @@
+import { ChangeEmailPasswordDTO } from './dtos/change-email.dto';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
@@ -11,9 +12,9 @@ import { CreateUserDTO } from 'src/users/dtos/create-user.dto';
 import { AuthEmailService } from './auth-email.service';
 import {
   BadRequestException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
-import { NotFoundError } from 'rxjs';
 import { ResetPasswordDTO } from './dtos/reset-password.dto';
 
 @Injectable()
@@ -159,7 +160,7 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(email);
 
     if (!user) {
-      throw new NotFoundError('User not found');
+      throw new NotFoundException('User not found');
     }
 
     if (!user.isActive) {
@@ -207,5 +208,38 @@ export class AuthService {
       isActive: user.isActive,
       emailVerified: user.emailVerified,
     };
+  }
+
+  async handleEmailUpdate(
+    userId: number,
+    { password, newEmail }: ChangeEmailPasswordDTO,
+  ): Promise<boolean> {
+    const user = await this.userService.findUserById(userId);
+
+    const matchPasswords = await argon2.verify(user.password, password);
+
+    if (!matchPasswords) {
+      throw new BadRequestException('Password is not correct');
+    }
+
+    const emailAlreadyUsed = await this.userService.findUserByEmail(newEmail);
+
+    if (emailAlreadyUsed) {
+      throw new BadRequestException('Email has been taken by another user');
+    }
+
+    const { firstname, lastname } = user;
+
+    const username = `${firstname} ${lastname}`;
+
+    await this.authEmailService.sendNewEmailVerificationLink(
+      {
+        email: user.email,
+        newEmail,
+      },
+      username,
+    );
+
+    return true;
   }
 }

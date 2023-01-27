@@ -1,3 +1,4 @@
+import { ChangeEmailPasswordDTO } from './dtos/change-email.dto';
 import {
   Body,
   Controller,
@@ -21,7 +22,6 @@ import { ResetPasswordDTO } from './dtos/reset-password.dto';
 import { PasswordDTO } from './dtos/password.dto';
 import { AccountVerified } from './decorators/account-verified';
 import { TypeORMQueryExceptionFilter } from './exception-filters/typeorm-exception.filter';
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -76,5 +76,14 @@ export class AuthController {
   @Post('logout')
   logOut(@Req() { user }: IAuthRequest) {
     return this.authService.logOut(user.id);
+  }
+
+  @AccountVerified('jwt')
+  @Post('change-email')
+  confirmNewEmail(
+    @Req() { user }: IAuthRequest,
+    @Body() changeEmailPasswordDTO: ChangeEmailPasswordDTO,
+  ) {
+    return this.authService.handleEmailUpdate(user.id, changeEmailPasswordDTO);
   }
 }

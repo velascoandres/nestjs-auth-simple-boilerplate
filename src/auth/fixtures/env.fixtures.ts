@@ -12,4 +12,8 @@ export default {
   EMAIL_CONFIRMATION_URL: 'https://localhost/auth/confirm-email',
   MAIL_USER: 'user@mail.com',
   MAIL_PASSWORD: '123',
+
+  JWT_CHANGE_EMAIL_TOKEN_SECRET: '123',
+  JWT_CHANGE_EMAIL_TOKEN_SECRET_EXPIRATION_TIME: '21600s',
+  NEW_EMAIL_CONFIRMATION_URL: 'http://my-app.com/auth/email/confirm-new-email',
 };

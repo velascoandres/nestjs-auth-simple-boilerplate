@@ -1,3 +1,4 @@
+import { ChangeEmailDTO } from './dtos/change-email.dto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -39,6 +40,35 @@ export class AuthEmailService {
       template: './confirmation',
       context: {
         username: username || email,
+        link,
+      },
+    });
+  }
+
+  sendNewEmailVerificationLink(
+    changeEmailDto: ChangeEmailDTO,
+    username?: string,
+  ) {
+    const token = this.jwtService.sign(
+      { email: changeEmailDto.email, newEmail: changeEmailDto.newEmail },
+      {
+        secret: this.configService.get('JWT_CHANGE_EMAIL_TOKEN_SECRET'),
+        expiresIn: this.configService.get(
+          'JWT_CHANGE_EMAIL_TOKEN_SECRET_EXPIRATION_TIME',
+        ),
+      },
+    );
+
+    const link = `${this.configService.get(
+      'NEW_EMAIL_CONFIRMATION_URL',
+    )}?token=${token}`;
+
+    return this.emailService.sendMail({
+      to: changeEmailDto.newEmail,
+      subject: 'Confirm your new email address',
+      template: './confirmation',
+      context: {
+        username: username || changeEmailDto.newEmail,
         link,
       },
     });
@@ -109,5 +139,11 @@ export class AuthEmailService {
         link,
       },
     });
+  }
+
+  async changeEmail(userId: number, newEmail: string): Promise<boolean> {
+    await this.usersService.updateUser(userId, { email: newEmail });
+
+    return true;
   }
 }

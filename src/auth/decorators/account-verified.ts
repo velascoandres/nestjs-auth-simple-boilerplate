@@ -6,7 +6,8 @@ export type IStrategyType =
   | 'local'
   | 'jwt'
   | 'jwt-refresh'
-  | 'jwt-forgot-password';
+  | 'jwt-forgot-password'
+  | 'jwt-change-email';
 
 export function AccountVerified(strategyType: IStrategyType) {
   return applyDecorators(

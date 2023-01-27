@@ -118,6 +118,53 @@ describe('AuthEmailService', () => {
     });
   });
 
+  describe('When send a confirmationLink for new email', () => {
+    it('should send an email confirmation link', async () => {
+      jest.spyOn(emailService, 'sendMail').mockImplementation(jest.fn());
+
+      await service.sendNewEmailVerificationLink(
+        {
+          email: 'some@mail.com',
+          newEmail: 'new-some@mail.com',
+        },
+        'username1',
+      );
+
+      expect(emailService.sendMail).toHaveBeenCalledWith({
+        to: 'new-some@mail.com',
+        subject: 'Confirm your new email address',
+        template: './confirmation',
+        context: {
+          username: 'username1',
+          link: expect.stringContaining(
+            '/auth/email/confirm-new-email?token=eyJhb',
+          ),
+        },
+      });
+    });
+
+    it('should send an email confirmation link without username', async () => {
+      jest.spyOn(emailService, 'sendMail').mockImplementation(jest.fn());
+
+      await service.sendNewEmailVerificationLink({
+        email: 'some@mail.com',
+        newEmail: 'new-some@mail.com',
+      });
+
+      expect(emailService.sendMail).toHaveBeenCalledWith({
+        to: 'new-some@mail.com',
+        subject: 'Confirm your new email address',
+        template: './confirmation',
+        context: {
+          username: 'new-some@mail.com',
+          link: expect.stringContaining(
+            '/auth/email/confirm-new-email?token=eyJhb',
+          ),
+        },
+      });
+    });
+  });
+
   describe('When validate confirm email token', () => {
     describe('When token has a valid payload', () => {
       beforeEach(() => {

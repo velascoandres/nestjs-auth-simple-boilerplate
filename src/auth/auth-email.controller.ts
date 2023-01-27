@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Post, Query, Render } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Render,
+  Req,
+} from '@nestjs/common';
 import { AuthEmailService } from './auth-email.service';
+import { AccountVerified } from './decorators/account-verified';
 import { EmailDTO } from './dtos/email.dto';
+import { IAuthNewEmailRequest } from './types/auth-new-email-request';
 
 @Controller('auth/email')
 export class AuthEmailController {
@@ -19,5 +29,11 @@ export class AuthEmailController {
   @Post('resend-confirmation-link')
   resendConfirmationLink(@Body() { email }: EmailDTO) {
     return this.authEmailService.resendConfirmationLink(email);
+  }
+
+  @AccountVerified('jwt-change-email')
+  @Get('verify-new-email')
+  changeEmail(@Req() { user }: IAuthNewEmailRequest) {
+    return this.authEmailService.changeEmail(user.id, user.newEmail);
   }
 }

@@ -8,6 +8,7 @@ export const mockEmailService = () => {
         return 'some-mock';
       }),
       sendForgotPasswordLink: jest.fn(() => true),
+      sendNewEmailVerificationLink: jest.fn(() => true),
     },
   };
 
