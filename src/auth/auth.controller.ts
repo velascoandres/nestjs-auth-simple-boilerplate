@@ -7,7 +7,6 @@ import {
   Query,
   Render,
   Req,
-  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -21,7 +20,6 @@ import { EmailDTO } from './dtos/email.dto';
 import { ResetPasswordDTO } from './dtos/reset-password.dto';
 import { PasswordDTO } from './dtos/password.dto';
 import { AccountVerified } from './decorators/account-verified';
-import { TypeORMQueryExceptionFilter } from './exception-filters/typeorm-exception.filter';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -32,14 +30,12 @@ export class AuthController {
     return { token };
   }
   @Post('sign-up')
-  @UseFilters(TypeORMQueryExceptionFilter)
   signUp(@Body() createUserDto: CreateUserDTO): Promise<IAuthUser> {
     return this.authService.signUp(createUserDto);
   }
 
   @AccountVerified('local')
   @Post('sign-in')
-  @UseFilters(TypeORMQueryExceptionFilter)
   signIn(@Req() authRequest: IAuthRequest): Promise<LoginResponseDTO> {
     return this.authService.signIn(authRequest.user);
   }

@@ -3,7 +3,9 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import { RequestMethod } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
+import { AuthModule } from './auth/auth.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -20,6 +22,17 @@ async function bootstrap() {
       },
     ],
   });
+
+  // enable validation globally
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    }),
+  );
+
+  // enable DI for class-validator
+  useContainer(app.select(AuthModule), { fallbackOnErrors: true });
 
   const configService = app.get(ConfigService);
 
