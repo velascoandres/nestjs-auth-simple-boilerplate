@@ -17,6 +17,7 @@ import { UsersService } from '../users/users.service';
 
 describe('AuthEmailService', () => {
   let service: AuthEmailService;
+  let userService: UsersService;
   let emailService: MailerService;
   let module: TestingModule;
   let dataSource: DataSource;
@@ -61,6 +62,7 @@ describe('AuthEmailService', () => {
     }).compile();
 
     service = module.get<AuthEmailService>(AuthEmailService);
+    userService = module.get<UsersService>(UsersService);
     emailService = module.get<MailerService>(MailerService);
     dataSource = module.get<DataSource>(DataSource);
     jwtService = module.get<JwtService>(JwtService);
@@ -275,6 +277,18 @@ describe('AuthEmailService', () => {
           link: expect.stringContaining('/auth/restore-password?token=eyJhb'),
         },
       });
+    });
+  });
+
+  describe('When change user email', () => {
+    it('should update the user email', async () => {
+      const result = await service.changeEmail(1, 'new-email@mail.com');
+
+      expect(result).toBe(true);
+
+      const user = await userService.findUserById(1);
+
+      expect(user.email).toBe('new-email@mail.com');
     });
   });
 });

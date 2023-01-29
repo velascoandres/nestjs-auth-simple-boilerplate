@@ -11,7 +11,11 @@ export class EmailVerifiedGuard implements CanActivate {
   canActivate(context: ExecutionContext) {
     const request: IAuthRequest = context.switchToHttp().getRequest();
 
-    if (!request.user?.emailVerified) {
+    if (!request.user) {
+      throw new UnauthorizedException('User is not valid');
+    }
+
+    if (!request.user.emailVerified) {
       throw new UnauthorizedException('Email is not verified yet');
     }
 

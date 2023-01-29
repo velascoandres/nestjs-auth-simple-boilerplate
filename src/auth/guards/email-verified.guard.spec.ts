@@ -44,5 +44,16 @@ describe('EmailVerifiedGuard', () => {
         );
       });
     });
+
+    describe('When request has not an user', () => {
+      it('should throw an exception', () => {
+        const mockContext = createMock<ExecutionContext>();
+        mockContext.switchToHttp().getRequest.mockReturnValue({});
+
+        expect(() => emailVerifiedGuard.canActivate(mockContext)).toThrow(
+          new UnauthorizedException('User is not valid'),
+        );
+      });
+    });
   });
 });
