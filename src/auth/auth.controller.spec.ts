@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { mockEmailService } from '../utils/auth-service.mock';
+import { RoleEntity } from '../users/entities/role.entity';
+import { UserRoleEntity } from '../users/entities/user-role.entity';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -16,7 +18,11 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+        ]),
         ConfigModule,
         JwtModule.register({}),
         PassportModule,

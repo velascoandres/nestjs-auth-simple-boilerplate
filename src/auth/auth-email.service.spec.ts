@@ -14,6 +14,8 @@ import usersFixtures from './fixtures/users.fixtures';
 import { DataSource } from 'typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { RoleEntity } from '../users/entities/role.entity';
+import { UserRoleEntity } from '../users/entities/user-role.entity';
 
 describe('AuthEmailService', () => {
   let service: AuthEmailService;
@@ -28,7 +30,11 @@ describe('AuthEmailService', () => {
 
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+        ]),
         JwtModule.register({}),
         PassportModule,
         ConfigModule,

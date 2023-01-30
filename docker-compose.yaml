@@ -6,8 +6,9 @@ services:
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       PGDATA: /data/postgres
+      POSTGRES_DB: ${POSTGRES_DB:-database}
     volumes:
        - postgres:/data/postgres
     ports:

@@ -15,6 +15,8 @@ import { mockEmailService } from '../../utils/auth-service.mock';
 import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 import { IAuthUser } from '../types/auth-user';
 import { Request } from 'express';
+import { RoleEntity } from '../../users/entities/role.entity';
+import { UserRoleEntity } from '../../users/entities/user-role.entity';
 
 describe('LocalStrategy tests', () => {
   let jwtRefreshStrategy: JwtRefreshStrategy;
@@ -24,7 +26,11 @@ describe('LocalStrategy tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+        ]),
         JwtModule.register({}),
         PassportModule,
         ConfigModule,

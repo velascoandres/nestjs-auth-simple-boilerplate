@@ -11,6 +11,8 @@ import { ConfigModule } from '@nestjs/config';
 import { mockConfigService } from '../utils/config-service.mock';
 import { mockEmailService } from '../utils/auth-service.mock';
 import { AuthEmailService } from './auth-email.service';
+import { RoleEntity } from '../users/entities/role.entity';
+import { UserRoleEntity } from '../users/entities/user-role.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -22,7 +24,11 @@ describe('AuthService', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+        ]),
         JwtModule.register({}),
         PassportModule,
         ConfigModule,

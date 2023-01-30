@@ -21,5 +21,13 @@ const config: Config.InitialOptions = {
     '/auth/auth-email.controller.ts',
     '/auth/auth.controller.ts',
   ],
+  coverageThreshold: {
+    global: {
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90,
+    },
+  },
 };
 export default config;

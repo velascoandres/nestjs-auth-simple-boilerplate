@@ -14,6 +14,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { AuthService } from '../auth.service';
 import { AuthEmailService } from '../auth-email.service';
 import { mockEmailService } from '../../utils/auth-service.mock';
+import { RoleEntity } from '../../users/entities/role.entity';
+import { UserRoleEntity } from '../../users/entities/user-role.entity';
 
 describe('JwtStrategy tests', () => {
   let jwtStrategy: JwtStrategy;
@@ -23,7 +25,11 @@ describe('JwtStrategy tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+        ]),
         JwtModule.register({}),
         PassportModule,
         ConfigModule,

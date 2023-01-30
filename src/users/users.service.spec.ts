@@ -5,6 +5,8 @@ import { UserEntity } from './entities/user.entity';
 import userFixtures from './fixtures/users.fixtures';
 import { DataSource } from 'typeorm';
 import { CreateUserDTO } from './dtos/create-user.dto';
+import { RoleEntity } from './entities/role.entity';
+import { UserRoleEntity } from './entities/user-role.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -13,7 +15,13 @@ describe('UsersService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity])],
+      imports: [
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+        ]),
+      ],
       providers: [UsersService],
     }).compile();
 

@@ -13,6 +13,8 @@ import { AuthService } from '../auth.service';
 import usersFixtures from '../fixtures/users.fixtures';
 import { ForbiddenException } from '@nestjs/common';
 import { mockEmailService } from '../../utils/auth-service.mock';
+import { RoleEntity } from '../../users/entities/role.entity';
+import { UserRoleEntity } from '../../users/entities/user-role.entity';
 
 describe('LocalStrategy tests', () => {
   let localStrategy: LocalStrategy;
@@ -22,7 +24,11 @@ describe('LocalStrategy tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([UserEntity]),
+        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+        ]),
         JwtModule.register({}),
         PassportModule,
         ConfigModule,
