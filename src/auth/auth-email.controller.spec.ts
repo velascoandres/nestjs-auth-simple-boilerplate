@@ -9,8 +9,8 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { AuthEmailService } from './auth-email.service';
 import { mockEmailService } from '../utils/auth-service.mock';
-import { RoleEntity } from "../users/entities/role.entity";
-import { UserRoleEntity } from "../users/entities/user-role.entity";
+import { RoleEntity } from '../users/entities/role.entity';
+import { UserRoleEntity } from '../users/entities/user-role.entity';
 
 describe('AuthEmailController', () => {
   let controller: AuthEmailController;
