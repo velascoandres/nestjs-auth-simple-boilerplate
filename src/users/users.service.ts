@@ -4,12 +4,16 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
+import { UserRoleEntity } from './entities/user-role.entity';
+import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserRoleEntity)
+    private readonly userRoleRepository: Repository<UserRoleEntity>,
   ) {}
 
   async createUser(createUserDto: CreateUserDTO): Promise<UserEntity> {
@@ -51,5 +55,16 @@ export class UsersService {
         emailVerified: true,
       },
     );
+  }
+
+  async getUserRoles(userId: number): Promise<RoleEntity[]> {
+    const query = this.userRoleRepository
+      .createQueryBuilder('userRole')
+      .innerJoinAndSelect(RoleEntity, 'role', 'role.id=userRole.role')
+      .where('userRole.user=:userId', { userId });
+
+    const userRoles = await query.getMany();
+
+    return userRoles.map((userRoles) => userRoles.role);
   }
 }

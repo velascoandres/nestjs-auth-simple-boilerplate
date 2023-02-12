@@ -104,7 +104,7 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    const authUser = this.getAuthUser(user);
+    const authUser = await this.getAuthUser(user);
 
     const tokens = await this.getTokens(authUser);
 
@@ -199,14 +199,22 @@ export class AuthService {
     return true;
   }
 
-  private getAuthUser(user: UserEntity) {
+  private async getAuthUser(user: UserEntity): Promise<IAuthUser> {
+    const rolesResponse = await this.userService.getUserRoles(user.id);
+
+    const roles = rolesResponse.map((role) => ({
+      id: role.id,
+      name: role.name,
+    }));
+
     return {
-      email: user.email,
       id: user.id,
+      email: user.email,
       firstname: user.firstname,
       lastname: user.lastname,
       isActive: user.isActive,
       emailVerified: user.emailVerified,
+      roles,
     };
   }
 

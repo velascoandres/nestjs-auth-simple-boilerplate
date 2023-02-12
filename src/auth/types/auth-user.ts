@@ -1,3 +1,8 @@
+interface IUserRole {
+  id: number;
+  name: string;
+}
+
 export interface IAuthUser {
   id: number;
   firstname: string;
@@ -5,6 +10,8 @@ export interface IAuthUser {
   email: string;
   isActive: boolean;
   emailVerified: boolean;
+
+  roles: IUserRole[];
 }
 
 export interface IAuthUserRefreshToken extends IAuthUser {

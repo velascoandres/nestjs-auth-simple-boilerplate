@@ -12,7 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
-import { IAuthRequest } from './types/auth-request';
+import { IAuthRefreshRequest, IAuthRequest } from './types/auth-request';
 import { AuthTokensDTO } from './dtos/auth-tokens.dto';
 import { LoginResponseDTO } from './dtos/login-response.dto';
 import { IAuthUser } from './types/auth-user';
@@ -42,7 +42,7 @@ export class AuthController {
 
   @AccountVerified('jwt-refresh')
   @Post('refresh-token')
-  refreshToken(@Req() { user }: IAuthRequest): Promise<AuthTokensDTO> {
+  refreshToken(@Req() { user }: IAuthRefreshRequest): Promise<AuthTokensDTO> {
     return this.authService.refreshTokens(user.id, user.refreshToken);
   }
 

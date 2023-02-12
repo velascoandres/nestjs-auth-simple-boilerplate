@@ -77,6 +77,7 @@ describe('JwtStrategy tests', () => {
           lastname: 'Smith',
           isActive: true,
           emailVerified: true,
+          roles: [],
         };
 
         const user = await jwtStrategy.validate(authUser);
@@ -104,6 +105,7 @@ describe('JwtStrategy tests', () => {
           email: 'jay@mail.com',
           isActive: false,
           emailVerified: false,
+          roles: [],
         };
         await expect(jwtStrategy.validate(authUser)).rejects.toThrow(
           new ForbiddenException('User not valid'),

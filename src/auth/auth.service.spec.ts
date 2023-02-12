@@ -159,6 +159,7 @@ describe('AuthService', () => {
         lastname: 'Smith',
         isActive: true,
         emailVerified: true,
+        roles: [],
       };
 
       const tokens = await service.getTokens(authUser);
@@ -233,6 +234,7 @@ describe('AuthService', () => {
         lastname: 'Smith',
         isActive: true,
         emailVerified: true,
+        roles: [],
       };
 
       const loginResponse = await service.signIn(authUser);

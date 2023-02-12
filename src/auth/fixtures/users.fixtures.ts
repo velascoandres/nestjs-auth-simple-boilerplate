@@ -1,4 +1,6 @@
 import { UserEntity } from '../../users/entities/user.entity';
+import { RoleEntity } from '../../users/entities/role.entity';
+import { UserRoleEntity } from '../../users/entities/user-role.entity';
 
 export default {
   user: {
@@ -53,6 +55,48 @@ export default {
         email: 'jay@mail.com',
         password: 'sha12312',
         isActive: false,
+      },
+    ],
+  },
+  role: {
+    entity: RoleEntity,
+    data: [
+      {
+        id: 1,
+        name: 'ADMIN',
+      },
+      {
+        id: 2,
+        name: 'STUDENT',
+      },
+      {
+        id: 3,
+        name: 'TEACHER',
+      },
+    ],
+  },
+  userRole: {
+    entity: UserRoleEntity,
+    data: [
+      {
+        id: 1,
+        userId: 1,
+        roleId: 1,
+      },
+      {
+        id: 2,
+        userId: 2,
+        roleId: 1,
+      },
+      {
+        id: 3,
+        userId: 2,
+        roleId: 3,
+      },
+      {
+        id: 4,
+        userId: 1,
+        roleId: 2,
       },
     ],
   },

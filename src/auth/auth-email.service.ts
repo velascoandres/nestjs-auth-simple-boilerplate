@@ -104,6 +104,7 @@ export class AuthEmailService {
       lastname: user.lastname,
       isActive: user.isActive,
       emailVerified: true,
+      roles: [],
     };
   }
 

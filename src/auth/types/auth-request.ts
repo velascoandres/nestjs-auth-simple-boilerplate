@@ -1,6 +1,10 @@
 import { Request } from 'express';
-import { UserEntity } from '../../users/entities/user.entity';
+import { IAuthUser } from './auth-user';
 
 export interface IAuthRequest extends Request {
-  user: UserEntity;
+  user: IAuthUser;
+}
+
+export interface IAuthRefreshRequest extends Request {
+  user: IAuthUser & { refreshToken: string };
 }
