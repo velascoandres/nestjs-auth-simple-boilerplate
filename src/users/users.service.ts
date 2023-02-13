@@ -57,15 +57,18 @@ export class UsersService {
     );
   }
 
-  async getUserRoles(userId: number): Promise<RoleEntity[]> {
+  async getUserRoles(
+    userId: number,
+  ): Promise<Omit<RoleEntity, 'createdAt' | 'updatedAt' | 'userRoles'>[]> {
     const query = this.userRoleRepository
       .createQueryBuilder('userRole')
-      .innerJoin('userRole.role', 'role')
-      .where('userRole.user=:userId', { userId })
-      .select(['userRole.id', 'role.id', 'role.name']);
-
+      .innerJoinAndSelect('userRole.role', 'role')
+      .where('userRole.user=:userId', { userId });
     const userRoles = await query.getMany();
 
-    return userRoles.map((userRoles) => userRoles.role);
+    return userRoles.map((userRole) => ({
+      id: userRole.role.id,
+      name: userRole.role.name,
+    }));
   }
 }
