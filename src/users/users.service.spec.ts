@@ -7,6 +7,7 @@ import { DataSource } from 'typeorm';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { RoleEntity } from './entities/role.entity';
 import { UserRoleEntity } from './entities/user-role.entity';
+import { RolesEnum } from './enums/roles.enum';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -170,6 +171,23 @@ describe('UsersService', () => {
       const updatedUser = await service.findUserById(2);
 
       expect(userBeforeUpdate.password).not.toBe(updatedUser.password);
+    });
+  });
+
+  describe('When get user roles', () => {
+    it('should get all user roles', async () => {
+      const roles = await service.getUserRoles(1);
+
+      expect(roles).toEqual([
+        {
+          id: 1,
+          name: RolesEnum.ADMIN,
+        },
+        {
+          id: 2,
+          name: RolesEnum.BASE_USER,
+        },
+      ]);
     });
   });
 });

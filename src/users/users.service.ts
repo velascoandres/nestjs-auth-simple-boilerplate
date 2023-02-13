@@ -60,8 +60,9 @@ export class UsersService {
   async getUserRoles(userId: number): Promise<RoleEntity[]> {
     const query = this.userRoleRepository
       .createQueryBuilder('userRole')
-      .innerJoinAndSelect(RoleEntity, 'role', 'role.id=userRole.role')
-      .where('userRole.user=:userId', { userId });
+      .innerJoin('userRole.role', 'role')
+      .where('userRole.user=:userId', { userId })
+      .select(['userRole.id', 'role.id', 'role.name']);
 
     const userRoles = await query.getMany();
 

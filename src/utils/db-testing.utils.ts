@@ -12,6 +12,7 @@ const TypeOrmSQLITETestingModule = (entities: any[]) => [
     database: ':memory:',
     dropSchema: true,
     entities: entities,
+    autoLoadEntities: true,
     synchronize: true,
   }),
   TypeOrmModule.forFeature(entities),
@@ -23,13 +24,9 @@ const loadFixtures = async (
 ) => {
   const entityManager = dataSource.createEntityManager();
 
-  const createResults = [];
-
   for (const { entity, data } of Object.values(fixtures)) {
-    createResults.push(entityManager.getRepository(entity).save(data));
+    await entityManager.getRepository(entity).save(data);
   }
-
-  await Promise.all(createResults);
 };
 
 const clearFixtures = async (
@@ -38,7 +35,7 @@ const clearFixtures = async (
 ) => {
   const entityManager = dataSource.createEntityManager();
 
-  for (const { entity } of Object.values(fixtures)) {
+  for (const { entity } of Object.values(fixtures).reverse()) {
     await entityManager.getRepository(entity).clear();
   }
 };

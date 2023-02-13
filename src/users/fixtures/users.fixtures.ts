@@ -37,11 +37,11 @@ export default {
       },
       {
         id: 2,
-        name: 'STUDENT',
+        name: 'BASE_USER',
       },
       {
         id: 3,
-        name: 'TEACHER',
+        name: 'COSTUMER',
       },
     ],
   },
@@ -50,23 +50,23 @@ export default {
     data: [
       {
         id: 1,
-        userId: 1,
-        roleId: 1,
+        user: 1,
+        role: 1,
       },
       {
         id: 2,
-        userId: 2,
-        roleId: 1,
+        user: 2,
+        role: 1,
       },
       {
         id: 3,
-        userId: 2,
-        roleId: 3,
+        user: 2,
+        role: 3,
       },
       {
         id: 4,
-        userId: 1,
-        roleId: 2,
+        user: 1,
+        role: 2,
       },
     ],
   },
