@@ -202,10 +202,7 @@ export class AuthService {
   private async getAuthUser(user: UserEntity): Promise<IAuthUser> {
     const rolesResponse = await this.userService.getUserRoles(user.id);
 
-    const roles = rolesResponse.map((role) => ({
-      id: role.id,
-      name: role.name,
-    }));
+    const roles = rolesResponse.map((role) => role.name);
 
     return {
       id: user.id,

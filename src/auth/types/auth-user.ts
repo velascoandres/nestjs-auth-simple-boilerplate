@@ -1,8 +1,3 @@
-interface IUserRole {
-  id: number;
-  name: string;
-}
-
 export interface IAuthUser {
   id: number;
   firstname: string;
@@ -11,7 +6,7 @@ export interface IAuthUser {
   isActive: boolean;
   emailVerified: boolean;
 
-  roles: IUserRole[];
+  roles: string[];
 }
 
 export interface IAuthUserRefreshToken extends IAuthUser {

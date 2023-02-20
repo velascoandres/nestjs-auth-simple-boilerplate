@@ -416,7 +416,7 @@ describe('AuthService', () => {
 
     describe('When user credentials are wrong', () => {
       it('should throw an error', async () => {
-        expect(
+        await expect(
           service.handleEmailUpdate(4, {
             newEmail: 'new-reby@mail.com',
             password: 'invalid-password',
