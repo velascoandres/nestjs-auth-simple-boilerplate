@@ -18,8 +18,6 @@ const config: Config.InitialOptions = {
     '.module.ts',
     '.mock.ts',
     'common-imports',
-    '/auth/auth-email.controller.ts',
-    '/auth/auth.controller.ts',
   ],
   coverageThreshold: {
     global: {
