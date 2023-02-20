@@ -12,7 +12,6 @@ import { mockEmailService } from '../utils/auth-service.mock';
 import { RoleEntity } from '../users/entities/role.entity';
 import { UserRoleEntity } from '../users/entities/user-role.entity';
 import { createMock } from '@golevelup/ts-jest';
-import { IAuthRequest } from './types/auth-request';
 import { IAuthNewEmailRequest } from './types/auth-new-email-request';
 
 describe('AuthEmailController', () => {

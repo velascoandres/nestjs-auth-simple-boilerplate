@@ -97,8 +97,6 @@ export class AuthEmailService {
 
     await this.usersService.markEmailAsVerified(email);
 
-    const roles = await this.usersService.getUserRoles(user.id);
-
     return {
       id: user.id,
       email: user.email,
