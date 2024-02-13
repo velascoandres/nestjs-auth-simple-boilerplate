@@ -5,14 +5,14 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { LocalStrategy } from './local.strategy';
 
-import { mockConfigService } from '../../utils/config-service.mock';
-import dbTestingUtils from '../../utils/db-testing.utils';
+import { mockConfigService } from '../../test-utils/config-service.mock';
+import dbTestingUtils from '../../test-utils/db-testing.utils';
 import { UserEntity } from '../../users/entities/user.entity';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
 import usersFixtures from '../fixtures/users.fixtures';
 import { ForbiddenException } from '@nestjs/common';
-import { mockEmailService } from '../../utils/auth-service.mock';
+import { mockEmailService } from '../../test-utils/auth-service.mock';
 import { RoleEntity } from '../../users/entities/role.entity';
 import { UserRoleEntity } from '../../users/entities/user-role.entity';
 
@@ -24,7 +24,7 @@ describe('LocalStrategy tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+        ...dbTestingUtils.TypeOrmTestingModule([
           UserEntity,
           RoleEntity,
           UserRoleEntity,
@@ -60,7 +60,7 @@ describe('LocalStrategy tests', () => {
   });
 
   afterEach(async () => {
-    await dbTestingUtils.clearFixtures(dataSource, usersFixtures);
+    await dbTestingUtils.clearFixtures(dataSource);
   });
 
   it('should be defined', () => {
