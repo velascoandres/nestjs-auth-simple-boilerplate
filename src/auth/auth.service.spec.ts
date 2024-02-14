@@ -1,18 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
-import { UserEntity } from '../users/entities/user.entity';
-import { UsersService } from '../users/users.service';
-import dbTestingUtils from '../utils/db-testing.utils';
-import { AuthService } from './auth.service';
-import usersFixtures from './fixtures/users.fixtures';
+
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigModule } from '@nestjs/config';
-import { mockConfigService } from '../utils/config-service.mock';
-import { mockEmailService } from '../utils/auth-service.mock';
-import { AuthEmailService } from './auth-email.service';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { mockEmailService } from '../test-utils/auth-service.mock';
+import { mockConfigService } from '../test-utils/config-service.mock';
+import dbTestingUtils from '../test-utils/db-testing.utils';
 import { RoleEntity } from '../users/entities/role.entity';
+import { UserEntity } from '../users/entities/user.entity';
 import { UserRoleEntity } from '../users/entities/user-role.entity';
+import { UsersService } from '../users/users.service';
+
+import usersFixtures from './fixtures/users.fixtures';
+import { AuthService } from './auth.service';
+import { AuthEmailService } from './auth-email.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -24,7 +27,7 @@ describe('AuthService', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+        ...dbTestingUtils.TypeOrmTestingModule([
           UserEntity,
           RoleEntity,
           UserRoleEntity,
@@ -63,7 +66,7 @@ describe('AuthService', () => {
   });
 
   afterEach(async () => {
-    await dbTestingUtils.clearFixtures(dataSource, usersFixtures);
+    await dbTestingUtils.clearFixtures(dataSource);
   });
 
   it('should be defined', () => {

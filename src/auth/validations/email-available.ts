@@ -4,6 +4,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+
 import { UsersService } from '../../users/users.service';
 
 @ValidatorConstraint({ async: true })

@@ -7,10 +7,11 @@ import {
   Render,
   Req,
 } from '@nestjs/common';
-import { AuthEmailService } from './auth-email.service';
+
 import { AccountVerified } from './decorators/account-verified';
 import { EmailDTO } from './dtos/email.dto';
 import { IAuthNewEmailRequest } from './types/auth-new-email-request';
+import { AuthEmailService } from './auth-email.service';
 
 @Controller('auth/email')
 export class AuthEmailController {

@@ -1,10 +1,12 @@
+import { join } from 'path';
+
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { join } from 'path';
-import { UsersModule } from '../users/users.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+
+import { UsersModule } from '../users/users.module';
 
 export default [
   UsersModule,

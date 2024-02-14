@@ -1,4 +1,3 @@
-import { ChangeEmailPasswordDTO } from './dtos/change-email.dto';
 import {
   Body,
   Controller,
@@ -10,16 +9,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
-import { AuthService } from './auth.service';
-import { IAuthRefreshRequest, IAuthRequest } from './types/auth-request';
-import { AuthTokensDTO } from './dtos/auth-tokens.dto';
-import { LoginResponseDTO } from './dtos/login-response.dto';
-import { IAuthUser } from './types/auth-user';
-import { EmailDTO } from './dtos/email.dto';
-import { ResetPasswordDTO } from './dtos/reset-password.dto';
-import { PasswordDTO } from './dtos/password.dto';
+
 import { AccountVerified } from './decorators/account-verified';
+import { AuthTokensDTO } from './dtos/auth-tokens.dto';
+import { ChangeEmailPasswordDTO } from './dtos/change-email.dto';
+import { EmailDTO } from './dtos/email.dto';
+import { LoginResponseDTO } from './dtos/login-response.dto';
+import { PasswordDTO } from './dtos/password.dto';
+import { ResetPasswordDTO } from './dtos/reset-password.dto';
+import { IAuthRefreshRequest, IAuthRequest } from './types/auth-request';
+import { IAuthUser } from './types/auth-user';
+import { AuthService } from './auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

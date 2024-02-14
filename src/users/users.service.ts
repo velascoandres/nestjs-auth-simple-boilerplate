@@ -1,11 +1,13 @@
+import { Repository } from 'typeorm';
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
+
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
-import { UserRoleEntity } from './entities/user-role.entity';
 import { RoleEntity } from './entities/role.entity';
+import { UserEntity } from './entities/user.entity';
+import { UserRoleEntity } from './entities/user-role.entity';
 
 @Injectable()
 export class UsersService {
@@ -27,8 +29,10 @@ export class UsersService {
     return this.userRepository.count();
   }
 
-  findUserByEmail(email: string): Promise<UserEntity | null> {
-    return this.userRepository.findOneBy({ email: email.toLowerCase() });
+  async findUserByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy({
+      email: email.toLowerCase(),
+    });
   }
 
   findUserById(userId: number): Promise<UserEntity | null> {

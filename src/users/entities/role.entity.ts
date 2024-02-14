@@ -1,7 +1,9 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+
 import { GenericEntity } from '../../core/generic-entity';
-import { UserRoleEntity } from './user-role.entity';
 import { RolesEnum } from '../enums/roles.enum';
+
+import { UserRoleEntity } from './user-role.entity';
 
 @Entity({ name: 'roles' })
 export class RoleEntity extends GenericEntity {

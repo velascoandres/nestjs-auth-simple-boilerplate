@@ -1,5 +1,7 @@
-import { Entity, Column, Index, OneToMany } from 'typeorm';
+import { Column, Entity, Index, OneToMany } from 'typeorm';
+
 import { GenericEntity } from '../../core/generic-entity';
+
 import { UserRoleEntity } from './user-role.entity';
 
 @Entity({ name: 'users' })

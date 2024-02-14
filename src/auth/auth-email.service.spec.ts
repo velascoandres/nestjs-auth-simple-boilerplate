@@ -1,21 +1,23 @@
+import { DataSource } from 'typeorm';
+
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockConfigService } from '../utils/config-service.mock';
-import { AuthEmailService } from './auth-email.service';
-import envFixtures from './fixtures/env.fixtures';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerService } from '@nestjs-modules/mailer';
-
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import dbTestingUtils from '../utils/db-testing.utils';
-import usersFixtures from './fixtures/users.fixtures';
-import { DataSource } from 'typeorm';
-import { UserEntity } from '../users/entities/user.entity';
-import { UsersService } from '../users/users.service';
+
+import { mockConfigService } from '../test-utils/config-service.mock';
+import dbTestingUtils from '../test-utils/db-testing.utils';
 import { RoleEntity } from '../users/entities/role.entity';
+import { UserEntity } from '../users/entities/user.entity';
 import { UserRoleEntity } from '../users/entities/user-role.entity';
+import { UsersService } from '../users/users.service';
+
+import envFixtures from './fixtures/env.fixtures';
+import usersFixtures from './fixtures/users.fixtures';
+import { AuthEmailService } from './auth-email.service';
 
 describe('AuthEmailService', () => {
   let service: AuthEmailService;
@@ -30,7 +32,7 @@ describe('AuthEmailService', () => {
 
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+        ...dbTestingUtils.TypeOrmTestingModule([
           UserEntity,
           RoleEntity,
           UserRoleEntity,
@@ -85,7 +87,7 @@ describe('AuthEmailService', () => {
   });
 
   afterEach(async () => {
-    await dbTestingUtils.clearFixtures(dataSource, usersFixtures);
+    await dbTestingUtils.clearFixtures(dataSource);
   });
 
   it('should be defined', () => {

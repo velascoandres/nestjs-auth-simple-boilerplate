@@ -1,21 +1,23 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
+
+import { ForbiddenException } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigModule } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 
-import { mockConfigService } from '../../utils/config-service.mock';
-import dbTestingUtils from '../../utils/db-testing.utils';
+import { mockEmailService } from '../../test-utils/auth-service.mock';
+import { mockConfigService } from '../../test-utils/config-service.mock';
+import dbTestingUtils from '../../test-utils/db-testing.utils';
+import { RoleEntity } from '../../users/entities/role.entity';
 import { UserEntity } from '../../users/entities/user.entity';
+import { UserRoleEntity } from '../../users/entities/user-role.entity';
 import { UsersService } from '../../users/users.service';
-import usersFixtures from '../fixtures/users.fixtures';
-import { ForbiddenException } from '@nestjs/common';
-import { JwtStrategy } from './jwt.strategy';
 import { AuthService } from '../auth.service';
 import { AuthEmailService } from '../auth-email.service';
-import { mockEmailService } from '../../utils/auth-service.mock';
-import { RoleEntity } from '../../users/entities/role.entity';
-import { UserRoleEntity } from '../../users/entities/user-role.entity';
+import usersFixtures from '../fixtures/users.fixtures';
+
+import { JwtStrategy } from './jwt.strategy';
 
 describe('JwtStrategy tests', () => {
   let jwtStrategy: JwtStrategy;
@@ -25,7 +27,7 @@ describe('JwtStrategy tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+        ...dbTestingUtils.TypeOrmTestingModule([
           UserEntity,
           RoleEntity,
           UserRoleEntity,
@@ -60,7 +62,7 @@ describe('JwtStrategy tests', () => {
   });
 
   afterEach(async () => {
-    await dbTestingUtils.clearFixtures(dataSource, usersFixtures);
+    await dbTestingUtils.clearFixtures(dataSource);
   });
 
   it('should be defined', () => {

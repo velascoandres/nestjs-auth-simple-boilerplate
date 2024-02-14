@@ -1,18 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { UsersService } from '../users/users.service';
-import { UserEntity } from '../users/entities/user.entity';
-import dbTestingUtils from '../utils/db-testing.utils';
+import { createMock } from '@golevelup/ts-jest';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigModule } from '@nestjs/config';
-import { mockEmailService } from '../utils/auth-service.mock';
-import { RoleEntity } from '../users/entities/role.entity';
-import { UserRoleEntity } from '../users/entities/user-role.entity';
-import { createMock } from '@golevelup/ts-jest';
-import { IAuthRefreshRequest, IAuthRequest } from './types/auth-request';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { mockEmailService } from '../test-utils/auth-service.mock';
+import dbTestingUtils from '../test-utils/db-testing.utils';
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
+import { RoleEntity } from '../users/entities/role.entity';
+import { UserEntity } from '../users/entities/user.entity';
+import { UserRoleEntity } from '../users/entities/user-role.entity';
+import { UsersService } from '../users/users.service';
+
+import { IAuthRefreshRequest, IAuthRequest } from './types/auth-request';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 const MOCK_USER = {
   id: 1,
@@ -37,7 +39,7 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+        ...dbTestingUtils.TypeOrmTestingModule([
           UserEntity,
           RoleEntity,
           UserRoleEntity,

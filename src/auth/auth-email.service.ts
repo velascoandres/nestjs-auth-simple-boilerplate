@@ -1,13 +1,15 @@
-import { ChangeEmailDTO } from './dtos/change-email.dto';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { MailerService } from '@nestjs-modules/mailer';
-import { UsersService } from '../users/users.service';
 import {
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { MailerService } from '@nestjs-modules/mailer';
+
+import { UsersService } from '../users/users.service';
+
+import { ChangeEmailDTO } from './dtos/change-email.dto';
 import { IAuthUser } from './types/auth-user';
 
 @Injectable()

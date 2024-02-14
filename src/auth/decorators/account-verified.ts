@@ -1,5 +1,6 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+
 import { EmailVerifiedGuard } from '../guards/email-verified.guard';
 
 export type IStrategyType =
