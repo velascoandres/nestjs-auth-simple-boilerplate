@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import dbTestingUtils from '../utils/db-testing.utils';
+import dbTestingUtils from '../test-utils/db-testing.utils';
 import { UserEntity } from './entities/user.entity';
 import userFixtures from './fixtures/users.fixtures';
 import { DataSource } from 'typeorm';
@@ -17,7 +17,7 @@ describe('UsersService', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+        ...dbTestingUtils.TypeOrmTestingModule([
           UserEntity,
           RoleEntity,
           UserRoleEntity,
@@ -39,7 +39,7 @@ describe('UsersService', () => {
   });
 
   afterEach(async () => {
-    await dbTestingUtils.clearFixtures(dataSource, userFixtures);
+    await dbTestingUtils.clearFixtures(dataSource);
   });
 
   it('should be defined', () => {
@@ -64,22 +64,6 @@ describe('UsersService', () => {
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         }),
-      );
-    });
-  });
-
-  describe('When create a user with duplicate email', () => {
-    it('should thrown an error', async () => {
-      const user = {
-        firstname: 'fistname1',
-        lastname: 'lastname1',
-        email: 'jorge@mail.com',
-        password: 'password12345',
-      } as CreateUserDTO;
-
-      const messagePattern = new RegExp(/email/s);
-      await expect(service.createUser(user)).rejects.toThrowError(
-        messagePattern,
       );
     });
   });

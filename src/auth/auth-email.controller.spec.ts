@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthEmailController } from './auth-email.controller';
-import dbTestingUtils from '../utils/db-testing.utils';
+import dbTestingUtils from '../test-utils/db-testing.utils';
 import { UserEntity } from '../users/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -8,7 +8,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { AuthEmailService } from './auth-email.service';
-import { mockEmailService } from '../utils/auth-service.mock';
+import { mockEmailService } from '../test-utils/auth-service.mock';
 import { RoleEntity } from '../users/entities/role.entity';
 import { UserRoleEntity } from '../users/entities/user-role.entity';
 import { createMock } from '@golevelup/ts-jest';
@@ -21,7 +21,7 @@ describe('AuthEmailController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ...dbTestingUtils.TypeOrmSQLITETestingModule([
+        ...dbTestingUtils.TypeOrmTestingModule([
           UserEntity,
           RoleEntity,
           UserRoleEntity,
