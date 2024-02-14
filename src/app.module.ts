@@ -21,7 +21,7 @@ import { UsersModule } from './users/users.module';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         url: configService.get('POSTGRES_URL'),
         synchronize: true,
-        dropSchema: true,
+        dropSchema: false,
       }),
       inject: [ConfigService],
     }),

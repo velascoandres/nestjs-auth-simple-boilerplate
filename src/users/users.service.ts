@@ -27,8 +27,10 @@ export class UsersService {
     return this.userRepository.count();
   }
 
-  findUserByEmail(email: string): Promise<UserEntity | null> {
-    return this.userRepository.findOneBy({ email: email.toLowerCase() });
+  async findUserByEmail(email: string): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy({
+      email: email.toLowerCase(),
+    });
   }
 
   findUserById(userId: number): Promise<UserEntity | null> {
