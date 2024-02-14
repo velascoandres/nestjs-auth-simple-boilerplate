@@ -1,11 +1,13 @@
+import { Repository } from 'typeorm';
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
+
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
-import { UserRoleEntity } from './entities/user-role.entity';
 import { RoleEntity } from './entities/role.entity';
+import { UserEntity } from './entities/user.entity';
+import { UserRoleEntity } from './entities/user-role.entity';
 
 @Injectable()
 export class UsersService {

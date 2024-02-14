@@ -1,5 +1,6 @@
-import { EmailAvailableConstraint } from './email-available';
 import type { UsersService } from '../../users/users.service';
+
+import { EmailAvailableConstraint } from './email-available';
 
 const userServiceMock: Partial<UsersService> = {
   findUserByEmail: jest.fn(),

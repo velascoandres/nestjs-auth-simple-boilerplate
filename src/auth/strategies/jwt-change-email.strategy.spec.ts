@@ -1,21 +1,23 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
+
+import { ForbiddenException } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { ConfigModule } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 
+import { mockEmailService } from '../../test-utils/auth-service.mock';
 import { mockConfigService } from '../../test-utils/config-service.mock';
 import dbTestingUtils from '../../test-utils/db-testing.utils';
+import { RoleEntity } from '../../users/entities/role.entity';
 import { UserEntity } from '../../users/entities/user.entity';
+import { UserRoleEntity } from '../../users/entities/user-role.entity';
 import { UsersService } from '../../users/users.service';
-import usersFixtures from '../fixtures/users.fixtures';
-import { ForbiddenException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { AuthEmailService } from '../auth-email.service';
-import { mockEmailService } from '../../test-utils/auth-service.mock';
+import usersFixtures from '../fixtures/users.fixtures';
+
 import { JwtChangeEmailStrategy } from './jwt-change-email.strategy';
-import { RoleEntity } from '../../users/entities/role.entity';
-import { UserRoleEntity } from '../../users/entities/user-role.entity';
 
 describe('JwtStrategy tests', () => {
   let jwtChangeEmailStrategy: JwtChangeEmailStrategy;

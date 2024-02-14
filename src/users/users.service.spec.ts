@@ -1,13 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
-import dbTestingUtils from '../test-utils/db-testing.utils';
-import { UserEntity } from './entities/user.entity';
-import userFixtures from './fixtures/users.fixtures';
 import { DataSource } from 'typeorm';
+
+import { Test, TestingModule } from '@nestjs/testing';
+
+import dbTestingUtils from '../test-utils/db-testing.utils';
+
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { RoleEntity } from './entities/role.entity';
+import { UserEntity } from './entities/user.entity';
 import { UserRoleEntity } from './entities/user-role.entity';
 import { RolesEnum } from './enums/roles.enum';
+import userFixtures from './fixtures/users.fixtures';
+import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;

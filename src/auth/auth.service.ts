@@ -1,21 +1,24 @@
-import { ChangeEmailPasswordDTO } from './dtos/change-email.dto';
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
-import { IAuthUser } from './types/auth-user';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { AuthTokensDTO } from './dtos/auth-tokens.dto';
-import { LoginResponseDTO } from './dtos/login-response.dto';
-import { UserEntity } from '../users/entities/user.entity';
 import { CreateUserDTO } from 'src/users/dtos/create-user.dto';
-import { AuthEmailService } from './auth-email.service';
+
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import {
   BadRequestException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common/exceptions';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+
+import { UserEntity } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+
+import { AuthTokensDTO } from './dtos/auth-tokens.dto';
+import { ChangeEmailPasswordDTO } from './dtos/change-email.dto';
+import { LoginResponseDTO } from './dtos/login-response.dto';
 import { ResetPasswordDTO } from './dtos/reset-password.dto';
+import { IAuthUser } from './types/auth-user';
+import { AuthEmailService } from './auth-email.service';
 
 @Injectable()
 export class AuthService {

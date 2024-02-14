@@ -1,5 +1,5 @@
-import { UserEntity } from '../entities/user.entity';
 import { RoleEntity } from '../entities/role.entity';
+import { UserEntity } from '../entities/user.entity';
 import { UserRoleEntity } from '../entities/user-role.entity';
 export default {
   user: {

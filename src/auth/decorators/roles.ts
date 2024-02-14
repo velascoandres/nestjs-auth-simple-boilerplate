@@ -1,7 +1,8 @@
 import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { EmailVerifiedGuard } from '../guards/email-verified.guard';
+
 import { RolesEnum } from '../../users/enums/roles.enum';
+import { EmailVerifiedGuard } from '../guards/email-verified.guard';
 import { RoleGuard } from '../guards/role.guard';
 
 export function Roles(...roles: RolesEnum[]) {

@@ -1,6 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
+
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+
 import { IAuthRequest } from '../types/auth-request';
 
 @Injectable()

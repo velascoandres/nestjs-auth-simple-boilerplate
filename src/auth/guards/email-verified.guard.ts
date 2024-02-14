@@ -1,9 +1,10 @@
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import { IAuthRequest } from '../types/auth-request';
 
 @Injectable()

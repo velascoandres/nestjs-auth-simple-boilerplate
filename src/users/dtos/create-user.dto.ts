@@ -1,4 +1,5 @@
 import { IsAlpha, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+
 import { EmailAvailable } from '../../auth/validations/email-available';
 
 export class CreateUserDTO {

@@ -1,6 +1,7 @@
-import { ExecutionContext } from '@nestjs/common';
 import { createMock } from '@golevelup/ts-jest';
+import { ExecutionContext } from '@nestjs/common';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
+
 import { EmailVerifiedGuard } from './email-verified.guard';
 
 describe('EmailVerifiedGuard', () => {
