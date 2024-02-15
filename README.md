@@ -99,7 +99,8 @@ MAIL_FROM=noreply@example.com
 - Replace `bl_pg_password` with the password for your PostgreSQL database.
 - Replace `localhost:4848` with the host and port of your PostgreSQL database.
 - Replace `bl_pg_local_db` with the name of your PostgreSQL database.
-> If you modified these values make sure to changes in the docker-compose file if you want to use it.
+
+> If you modify these values ​​make sure to change too at the docker-compose.yaml file
 
 #### POSTGRES_TEST_URL
 - Replace `test_user` with the username for your test PostgreSQL database.
@@ -107,7 +108,7 @@ MAIL_FROM=noreply@example.com
 - Replace `localhost:4949` with the host and port of your test PostgreSQL database.
 - Replace `bl_pg_test_db` with the name of your test PostgreSQL database.
 
-> If you modified these values make sure to changes in the docker-compose file if you want to use it.
+> If you modify these values ​​make sure to change too at the docker-compose.yaml file
 
 #### JWT_ACCESS_SECRET
 - Generate a secret key for signing JWT access tokens.
