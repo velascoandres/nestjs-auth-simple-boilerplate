@@ -7,12 +7,14 @@ import {
   Render,
   Req,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { AccountVerified } from './decorators/account-verified';
 import { EmailDTO } from './dtos/email.dto';
 import { IAuthNewEmailRequest } from './types/auth-new-email-request';
 import { AuthEmailService } from './auth-email.service';
 
+@ApiTags('Authentication - email')
 @Controller('auth/email')
 export class AuthEmailController {
   constructor(private readonly authEmailService: AuthEmailService) {}

@@ -27,5 +27,8 @@ const config: Config.InitialOptions = {
       statements: 90,
     },
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+  },
 };
 export default config;
