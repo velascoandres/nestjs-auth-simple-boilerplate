@@ -1,32 +1,39 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
+A Nest.js boilerplate with authentication with jwt, verification emails, etc.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
+Clone this repository. Set up your virtual environment (optional but recommended). Copy the contents of .env.example into a new file named .env and configure the required variables.
+
+```text
+APP_PORT=3000
+
+# Postgres connnection uri from docker-compose file (dev and testing)
+POSTGRES_URL="postgresql://bl_pg_user:bl_pg_password@localhost:4848/bl_pg_local_db"
+POSTGRES_TEST_URL="postgresql://test_user:test_password@localhost:4949/bl_pg_test_db"
+
+JWT_ACCESS_SECRET="KEY_SECRET"
+JWT_REFRESH_SECRET="KEY_SECRET"
+JWT_EXPIRES="45min"
+JWT_REFRESH_EXPIRES="1y"
+
+
+JWT_VERIFICATION_TOKEN_SECRET="123"
+JWT_VERIFICATION_TOKEN_EXPIRATION_TIME="21600s"
+EMAIL_CONFIRMATION_URL="http://localhost:3000/auth/email/confirm-email"
+
+
+JWT_FORGOT_PASSWORD_TOKEN_SECRET="123"
+JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION_TIME="21600s"
+FORGOT_PASSWORD_URL="http://localhost:3000/auth/restore-password"
+
+
+MAIL_HOST=smtp.example.com
+MAIL_USER=examples@mail.com
+MAIL_PASSWORD=some-password
+MAIL_FROM=noreply@example.com
+```
+
 
 ```bash
 $ npm install

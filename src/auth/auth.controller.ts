@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { CreateUserDTO } from '../users/dtos/create-user.dto';
 
@@ -19,9 +20,12 @@ import { EmailDTO } from './dtos/email.dto';
 import { LoginResponseDTO } from './dtos/login-response.dto';
 import { PasswordDTO } from './dtos/password.dto';
 import { ResetPasswordDTO } from './dtos/reset-password.dto';
+import { SignInDTO } from './dtos/sign-in.dto';
 import { IAuthRefreshRequest, IAuthRequest } from './types/auth-request';
 import { IAuthUser } from './types/auth-user';
 import { AuthService } from './auth.service';
+
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -36,12 +40,14 @@ export class AuthController {
     return this.authService.signUp(createUserDto);
   }
 
+  @ApiBody({ type: SignInDTO })
   @AccountVerified('local')
   @Post('sign-in')
   signIn(@Req() authRequest: IAuthRequest): Promise<LoginResponseDTO> {
     return this.authService.signIn(authRequest.user);
   }
 
+  @ApiBearerAuth()
   @AccountVerified('jwt-refresh')
   @Post('refresh-token')
   refreshToken(@Req() { user }: IAuthRefreshRequest): Promise<AuthTokensDTO> {
@@ -53,6 +59,7 @@ export class AuthController {
     return this.authService.forgotPassword(email);
   }
 
+  @ApiBearerAuth()
   @AccountVerified('jwt')
   @Post('reset-password')
   resetPassword(
@@ -70,12 +77,15 @@ export class AuthController {
   ) {
     return this.authService.changePassword(user.id, password);
   }
+
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post('logout')
   logOut(@Req() { user }: IAuthRequest) {
     return this.authService.logOut(user.id);
   }
 
+  @ApiBearerAuth()
   @AccountVerified('jwt')
   @Post('change-email')
   confirmNewEmail(

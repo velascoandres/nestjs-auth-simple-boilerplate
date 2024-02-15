@@ -18,6 +18,9 @@ const config: Config.InitialOptions = {
     '.module.ts',
     '.mock.ts',
     'common-imports',
+    'db-testing.utils.ts',
+    'roles',
+    'decorators',
   ],
   coverageThreshold: {
     global: {
@@ -26,6 +29,9 @@ const config: Config.InitialOptions = {
       lines: 90,
       statements: 90,
     },
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
   },
 };
 export default config;

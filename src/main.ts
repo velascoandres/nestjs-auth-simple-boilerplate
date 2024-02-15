@@ -5,14 +5,13 @@ import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AuthModule } from './auth/auth.module';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  // app.useStaticAssets(resolve(__dirname, '..', 'public'));
-  // app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.useStaticAssets(resolve('./public'));
   app.setBaseViewsDir(resolve('./views'));
   app.setViewEngine('hbs');
@@ -26,6 +25,18 @@ async function bootstrap() {
       },
     ],
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('Nest auth boilerplate')
+    .setDescription('Documentation for endpoints')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config, {
+    include: [AuthModule],
+  });
+  SwaggerModule.setup('api/docs', app, document);
 
   // enable validation globally
   app.useGlobalPipes(
